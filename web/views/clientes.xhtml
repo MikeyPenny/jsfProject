@@ -1,0 +1,389 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Listado Clientes</title>
+    </h:head>
+    <h:body>
+        <h:form id="frmListCliente" >
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <p:panel header="Listado de Clientes" footer="Seleccione un registro para mostrar el detalle" >
+                
+                    
+                <p:fieldset legend="Datos Generales">
+                    
+                    <h:outputLabel for="selCte" value="Buscar Cliente" />
+                    <p:inputText id="selCte" value="#{lista.razon}" placeholder="Seleccionar cliente" 
+                                 onclick="PF('dialCte').show();" />
+                    
+                    
+
+                    <h:panelGrid id="grdCliente" columns="4" >
+                        <h:outputLabel for="razSoc" value="Denominación o Razón Social: "  />
+                        <p:inputText id="razSoc" value="#{lista.razon}"  />
+                        
+                        <h:outputLabel for="fechConst" value="Fecha de Constitución" />
+                        <p:inputText id="fechConst" value="#{lista.fechConst}" />
+
+                        <h:outputLabel for="nac" value="Nacionalidad"  />
+                        <p:inputText id="nac" value="#{lista.nacionalidad}" />
+                        
+                        <h:outputLabel for="act" value="Actividad o Giro Mercantil" style="margin-right: 53px" />
+                        <p:inputText id="act" value="#{lista.giro}" />
+
+                        <h:outputLabel for="rfcCliente" value="RFC" style="margin-right: 63px; margin-left: 10px" />
+                        <p:inputText id="rfcCliente" value="#{lista.rfcCliente}" />
+
+                    </h:panelGrid>
+                    
+                    
+                </p:fieldset>
+
+                <p:fieldset legend="Dirección Fiscal">
+
+                    <h:panelGrid columns="2" >
+                        <h:outputLabel for="calle" value="Calle o Avenida" style="margin-right: 60px" />
+                        <p:inputText id="calle" value="#{lista.calleFisc}" />
+                    </h:panelGrid>
+
+                    <h:panelGrid id="grdDir" columns="6">
+                        <h:outputLabel for="numExt" value="No. Exterior" />
+                        <p:inputText id="numExt" value="#{lista.extFisc}" />
+
+                        <h:outputLabel for="numInt" value="No. Interior" />
+                        <p:inputText id="numInt" value="#{lista.intFisc}" />
+
+                        <h:outputLabel for="colonia" value="Colonia" />
+                        <p:inputText id="colonia" value="#{lista.colFisc}" />
+
+                        <h:outputLabel for="deleg" value="Delegación o Municipio" />
+                        <p:inputText id="deleg" value="#{lista.delFisc}" />
+
+                        <h:outputLabel for="codPst" value="CP." />
+                        <p:inputText id="codPst" value="#{lista.cpFisc}" />
+
+                    </h:panelGrid>
+
+                    <h:outputLabel for="entFed" value="Entidad Federativa" style="margin-right: 40px" />
+                    <p:inputText id="entFed" value="#{lista.entFedFisc}" />
+
+                    <h:panelGrid id="grdTel" columns="6" >
+
+                        <h:outputLabel for="lada" value="Lada" style="margin-right: 141px" />
+                        <p:inputText id="lada" value="#{lista.ladaFisc}" />
+
+                        <h:outputLabel for="tel" value="Teléfono" />
+                        <p:inputText id="tel" value="#{lista.telFisc}" />
+
+                        <h:outputLabel for="ext" value="Extensión" />
+                        <p:inputText id="ext" value="#{lista.exFisc}" />
+
+                        <h:outputLabel for="mail" value="E-mail" />
+                        <p:inputText id="mail" value="#{lista.emailFisc}" />
+
+
+
+                    </h:panelGrid>
+
+                </p:fieldset>
+
+                <p:fieldset legend="Dirección Social">
+                    <h:outputLabel for="calleSoc" value="Calle o Avenida" style="margin-right: 65px" />
+                    <p:inputText id="calleSoc" value="#{lista.calleSoc}" />
+
+                    <h:panelGrid id="grdDirSoc" columns="6">
+                        <h:outputLabel for="numExtSoc" value="No. Exterior" />
+                        <p:inputText id="numExtSoc" value="#{lista.extSoc}" />
+
+                        <h:outputLabel for="numInt" value="No. Interior" />
+                        <p:inputText id="numIntSoc" value="#{lista.intSoc}" />
+
+                        <h:outputLabel for="colonia" value="Colonia" />
+                        <p:inputText id="coloniaSoc" value="#{lista.colSoc}" />
+
+                        <h:outputLabel for="delegSoc" value="Delegación o Municipio" />
+                        <p:inputText id="delegSoc" value="#{lista.delSoc}" />
+
+                        <h:outputLabel for="codPstSoc" value="CP." />
+                        <p:inputText id="codPstSoc" value="#{lista.cpSoc}" />
+
+                    </h:panelGrid>
+
+                    <h:outputLabel for="entFedSoc" value="Entidad Federativa" style="margin-right: 40px" />
+                    <p:inputText id="entFedSoc" value="#{lista.entFedSoc}" />
+
+                    <h:panelGrid id="grdTelSoc" columns="6" >
+
+                        <h:outputLabel for="ladaSoc" value="Lada" style="margin-right: 141px" />
+                        <p:inputText id="ladaSoc" value="#{lista.ladaSoc}" />
+
+                        <h:outputLabel for="telSoc" value="Teléfono" />
+                        <p:inputText id="telSoc" value="#{lista.telSoc}" />
+
+                        <h:outputLabel for="extSoc" value="Extensión" />
+                        <p:inputText id="extSoc" value="#{lista.exSoc}" />
+
+                        <h:outputLabel for="mailSoc" value="E-mail" />
+                        <p:inputText id="mailSoc" value="#{lista.emailSoc}" />
+
+
+
+                    </h:panelGrid>
+
+                </p:fieldset>
+
+                <p:fieldset legend="Apoderado(s) Legal(es)" >
+                    <h:panelGrid id="grdApod" columns="6">
+                        <h:outputLabel for="nombre" value="Nombre" />
+                        <p:inputText id="nombre" value="#{lista.nombApod}" />
+
+                        <h:outputLabel for="aPat" value="Apellido Paterno" />
+                        <p:inputText id="aPat" value="#{lista.patApod}" />
+
+                        <h:outputLabel for="aMat" value="Apellido Materno" />
+                        <p:inputText id="aMat" value="#{lista.matApod}" />
+
+                        <h:outputLabel for="rfc" value="RFC" />
+                        <p:inputText id="rfc" value="#{lista.rfcApod}" />
+
+                        <h:outputLabel for="curp" value="CURP" />
+                        <p:inputText id="curp" value="#{lista.curpApod}" />
+                    </h:panelGrid>
+
+                    <h:panelGrid id="grdFechaNac" columns="7" >
+                        <h:outputLabel for="dia" value="Día" style="margin-right: 34px" />
+                        <p:inputText id="dia" value="#{lista.diaNacAPod}" />
+
+                        <h:outputLabel for="mes" value="Mes" style="margin-right: 97px" />
+                        <p:inputText id="mes" value="#{lista.mesNacApod}" />
+
+                        <h:outputLabel for="year" value="Año" style="margin-right: 97px" />
+                        <p:inputText id="year" value="#{lista.yearNacApod}" />
+                    </h:panelGrid>
+
+                    <p:commandButton id="btnApoderado" value="Agregar" actionListener="#{lista.agregarApoderado}" 
+                                     update="tblApod, grdApod, grdFechaNac" />
+
+
+
+                    <br/><br/>
+
+                    <p:dataTable id="tblApod" value="#{lista.listApod}" var="apod" rowKey="#{apod.id_apoderado}" >
+                        
+                        <p:column>
+                            <h:outputText value="#{apod.id_apoderado}" />
+                        </p:column>
+                        
+                        <p:column headerText="Nombre" >
+                            <h:outputText value="#{apod.nombApod}" />
+                        </p:column>
+
+                        <p:column headerText="Apellido Paterno" >
+                            <h:outputText value="#{apod.patApod}" />
+                        </p:column>
+
+                        <p:column headerText="Fecha de Nacimiento" >
+                            <h:outputText value="#{apod.fechaNacApod}" />
+                        </p:column>
+                        
+                        <p:column headerText="Eliminar registro" >
+                            <p:commandButton id="btnElimApod" value="Eliminar" oncomplete="onApodDelete();" >
+                                <f:setPropertyActionListener value="#{apod}" target="#{lista.apodSel}" />
+                            </p:commandButton>                 
+                        </p:column>
+
+                    </p:dataTable>
+                    
+                    <p:remoteCommand name="onApodDelete" actionListener="#{lista.eliminaApod()}" update="tblApod"  />
+
+                </p:fieldset>
+
+                <p:fieldset legend="Documentos" >
+
+                    <h:outputLabel value="a)Testimonio o copia certificada del acta constitutiva" />
+                    <p:selectOneRadio value="#{lista.testim}" >
+                        <f:selectItem itemLabel="Cumple" itemValue="true" />
+                        <f:selectItem itemLabel="No Cumple" itemValue="false" />
+                    </p:selectOneRadio>
+
+                    <h:outputLabel value="b)Cédula de identificación fiscal" />
+                    <p:selectOneRadio value="#{lista.cedula}" >
+                        <f:selectItem itemLabel="Cumple" itemValue="true" />
+                        <f:selectItem itemLabel="No Cumple" itemValue="false" />
+                    </p:selectOneRadio>
+
+                    <h:outputLabel value="c)Comprobante de domicilio no mayor a 3 meses de su fecha de expedición" />
+                    <p:selectOneRadio value="#{lista.compDom}" >
+                        <f:selectItem itemLabel="Cumple" itemValue="true" />
+                        <f:selectItem itemLabel="No Cumple" itemValue="false" />
+                    </p:selectOneRadio>
+
+                    <h:outputLabel value="d)Testimonio o copia certificada del poder legal" />
+                    <p:selectOneRadio value="#{lista.testPodLegal}" >
+                        <f:selectItem itemLabel="Cumple" itemValue="true" />
+                        <f:selectItem itemLabel="No Cumple" itemValue="false" />
+                    </p:selectOneRadio>
+
+                    <h:outputLabel value="e)Identificación oficial del o de los apoderados legales" />
+                    <p:selectOneRadio value="#{lista.idApod}" >
+                        <f:selectItem itemLabel="Cumple" itemValue="true" />
+                        <f:selectItem itemLabel="No Cumple" itemValue="false" />
+                    </p:selectOneRadio>
+
+                    <h:outputLabel value="f)Formatos FM-2 o FM-3 en caso de que el o los representantes sean extranjeros" />
+                    <p:selectOneRadio value="#{lista.fm23}" >
+                        <f:selectItem itemLabel="Cumple" itemValue="true" />
+                        <f:selectItem itemLabel="No Cumple" itemValue="false" />
+                    </p:selectOneRadio>
+
+                    <h:outputLabel value="g)Constancia por la que debería identificar el dueño beneficiario" />
+                    <p:selectOneRadio value="#{lista.constBenef}" >
+                        <f:selectItem itemLabel="Cumple" itemValue="true" />
+                        <f:selectItem itemLabel="No Cumple" itemValue="false" />
+                    </p:selectOneRadio>
+
+                    <h:outputLabel value="h)Modificaciones" />
+                    <p:selectOneRadio value="#{lista.modif}" >
+                        <f:selectItem itemLabel="Si" itemValue="true" />
+                        <f:selectItem itemLabel="No" itemValue="false" />
+                    </p:selectOneRadio>
+
+                    <h:outputLabel for="modif" value="Especificar modificación:" /><br/>
+                    <h:inputTextarea id="modif" value="#{lista.espModif}" />
+
+
+                </p:fieldset>
+
+                <p:fieldset legend="Dueño Beneficiario(Encaso de existir)" >
+
+
+                </p:fieldset>
+
+                <p:fieldset legend="Datos Bancarios" >
+                    <h:panelGrid id="grdBanco" columns="4" >
+                        <h:outputLabel for="nomBan" value="Nombre del Banco:" style="margin-right: 60px" />
+                        <p:inputText id="nomBan" value="#{lista.banco}" />
+
+                        <h:outputLabel for="plBan" value="No. y Nombre de plaza" />
+                        <p:inputText id="plBan" value="#{lista.plaza}" />
+
+                        <h:outputLabel for="ctaBan" value="No. de cuenta" />
+                        <p:inputText id="ctaBan" value="#{lista.cta}" />
+
+                        <h:outputLabel for="claBan" value="CLABE" />
+                        <p:inputText id="claBan" value="#{lista.clabe}" style="width: 280px" />
+
+                        <h:outputLabel for="metBan" value="Método de pago" />
+                        <p:inputText id="metBan" value="#{lista.metodo}" />
+
+                    </h:panelGrid>
+
+                    <h:panelGrid id="grdBenefBanc" columns="2" >
+                        <h:outputLabel for="nomBenef" value="Nombre del Titular" style="margin-right: 66px" />
+                        <p:inputText id="nomBenef" value="#{lista.nomBenef}" />
+
+                        <h:outputLabel for="appBenef" value="A. Paterno" />
+                        <p:inputText id="appBenef" value="#{lista.apePatBenef}" />
+
+                        <h:outputLabel for="apmBenef" value="A. Materno" />
+                        <p:inputText id="apmBenef" value="#{lista.apeMatBenef}" />
+
+                    </h:panelGrid>
+
+                    <h:panelGrid id="grdFechNacTit" columns="7" >
+                        <h:outputText value="Fecha de Nacimiento" />
+
+                        <h:outputLabel for="dNacBen" value="Día" />
+                        <p:inputText id="dNacBen" value="#{lista.diaNacBenef}" />
+
+                        <h:outputLabel for="mNacBen" value="Mes" />
+                        <p:inputText id="mNacBen" value="#{lista.mesNacBenef}" />
+
+                        <h:outputLabel for="yNacBen" value="Año" />
+                        <p:inputText id="yNacBen" value="#{lista.yearNacBenef}" />
+
+                        <h:panelGroup/>
+
+
+                        <h:outputLabel for="rfcBen" value="RFC" />
+                        <p:inputText id="rfcBen" value="#{lista.rfcBenef}" />
+
+                        <h:outputLabel for="curpBen" value="CURP" />
+                        <p:inputText id="curpBen" value="#{lista.curpBenef}" />
+
+                    </h:panelGrid>
+                    <br/>
+                    <p:commandButton id="btnBanco" value="Agregar Banco" actionListener="#{lista.agregarBanco}"
+                                     update="tblBanco" />
+
+                    <p:commandButton id="btnLimpiarBanco" value="Limpiar Datos" actionListener="#{lista.cleanBanco}"
+                                     update="grdFechNacTit, grdBenefBanc, grdBanco" />
+
+                    <br/><br/>
+                    <p:dataTable id="tblBanco" value="#{lista.listBanco}" var="b" rowKey="#{cliente.clabe}"
+                                 emptyMessage="No se encontraron registros" >
+
+                        <p:column headerText="Banco" >
+                            <h:outputText value="#{b.banco}" />
+                        </p:column>
+
+                        <p:column headerText="Cuenta CLABE" >
+                            <h:outputText value="#{b.clabe}" />
+                        </p:column>
+
+                        <p:column headerText="Títular" >
+                            <h:outputText value="#{b.nomBenef}  #{b.apePatBenef}" />
+                        </p:column>
+                        
+                        <p:column headerText="Eliminar registro" >
+                            <p:commandButton id="btnElimina" value="Eliminar" oncomplete="onRowDelete()" >
+                                <f:setPropertyActionListener value="#{b}" target="#{lista.bancoSel}" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable> 
+
+                </p:fieldset>
+                
+                <p:remoteCommand name="onRowDelete" actionListener="#{lista.eliminarBanco}" update="tblBanco" />
+                
+                <br/>
+                <p:commandButton id="btnCliente" value="Editar Cliente" actionListener="#{lista.editarCliente}" 
+                                 style="margin-right: 20px" update=":frmCliente:tblClientes, growl" />
+                <p:commandButton id="btnCancel" value="Cancelar" actionListener="#{lista.cleanFields}" update="frmCliente" />
+
+                
+            </p:panel>
+            
+        </h:form>
+        
+        <p:dialog header="Editar Cliente" widgetVar="dialCte" resizable="false" modal="true" 
+                      closeOnEscape="true"  >
+                
+            <h:form id="frmCliente"  >
+                <p:dataTable id="tblClientes" value="#{lista.listCliente}" var="cl" rowKey="#{cl.id_cliente}" 
+                             selection="#{lista.clienteSel}" selectionMode="single" >
+                    
+                    <p:column headerText="Razón Social">
+                        <h:outputText value="#{cl.razon}" />
+                    </p:column>
+
+                    <p:column headerText="RFC">
+                        <h:outputText value="#{cl.rfcCliente}" />
+                    </p:column>
+                    
+                    <p:ajax event="rowSelect" listener="#{lista.seleccionarCliente()}" update="frmListCliente" 
+                            oncomplete="PF('dialCte').hide();" />
+                    
+                </p:dataTable>
+
+            </h:form>
+
+        </p:dialog>
+        
+    </h:body>
+</html>
+

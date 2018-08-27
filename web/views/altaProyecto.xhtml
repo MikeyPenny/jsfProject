@@ -1,0 +1,423 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <title>ERP TunnigSys</title>
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="cssLayout.css" />
+        
+    </h:head>
+    <h:body >
+        <p:panel header="Alta Proyecto" footer="Registro de proyectos" styleClass="container" >
+            
+            <div class="container" >
+                <h:form id="formAlta" title="Proyectos" class="form-horizontal" >
+                    <p:growl id="msjRegistro" showDetail="true" life="5000" />
+                    <p:fieldset legend="Generales" style="margin-bottom:20px"  >
+                        
+                        <div class="row form-group" >
+                            <div class="col-md-6" >
+                                <p:outputLabel styleClass="sr-only" for="nomProy" value="Proyecto: " />
+                                <p:inputText styleClass="form-control" id="nomProy" value="#{altaMBean.proyecto}" required="true" 
+                                             placeholder="Proyecto:" />
+                            </div>
+                            <div class="col-md-6" >
+                                <p:outputLabel styleClass="sr-only" for="codProy" value="Código del Proyecto: " />
+                                <p:inputText styleClass="form-control" id="codProy" value="#{altaMBean.codProy}" required="true" 
+                                             placeholder="Código del Proyecto:" />
+                            </div>
+                        </div>
+                        
+                        <div class="row form-group" >
+                            
+
+                            <div class="col-md-6">
+                                <p:outputLabel styleClass="sr-only" for="contto" value="No. de Contrato: " />
+                                
+                                    <p:inputText styleClass="form-control" id="contto" value="#{altaMBean.numContrato}" 
+                                             placeholder="No. de Contrato:"/>
+                                
+                            </div>
+
+
+                            <div class="col-md-6" >
+                                <p:outputLabel styleClass="sr-only" for="tipoContto" value="Tipo de Contrato: " />
+                                
+                                    <p:inputText styleClass="form-control" id="tipoContto" value="#{altaMBean.contrato}" 
+                                             placeholder="Tipo de Contrato:" />
+                                
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row form-group">
+                        
+                            <div class="col-md-3">
+                                <p:outputLabel styleClass="sr-only" for="impContto" value="Importe Contrato: " />
+                                <p:inputText styleClass="form-control" id="impContto" value="#{altaMBean.importeContto}"  required="true" placeholder="Importe Contrato:" >
+                                    
+                                    <p:ajax event="change" listener="#{altaMBean.calculaPorcentajes()}"
+                                            update="impContto, fGarantiaPct, fianzaAnt, fianzaCump,
+                                            fianzaVic, conttoTot, anticipo, fianzaTot, fGarantia, importeAnt, 
+                                            importeCump, importeVic, antcpoTot, segurosTot" />
+                                    <f:convertNumber pattern="###,###,###,###.00" />
+                                </p:inputText>
+                            </div>
+
+                            <div class="col-md-3">
+                                <p:outputLabel styleClass="sr-only" for="formPago" value="Forma de Pago: " />
+                                <p:inputText styleClass="form-control" id="formPago" value="#{altaMBean.formaDPago}"  
+                                             placeholder="Forma de Pago:" />
+                            </div>
+
+                            <div class="col-md-3" >
+                                <div class="input-group" >
+                                    <p:outputLabel styleClass="sr-only " for="anticipo" value="Anticipo: " />
+                                    <div class="input-group-addon" >
+                                        <p:inputText id="pctAntcpo" value="#{altaMBean.pctAntcpo}" required="true"
+                                                 style="width: 50px; margin-right: 10px" styleClass="form-control" >
+                                            <p:ajax event="change" listener="#{altaMBean.calcularAntcpo}" 
+                                                    update="anticipo, antcpoTot, fianzaTot" />
+                                        </p:inputText>
+                                    </div>
+                                    <p:inputText styleClass="form-control" id="anticipo" value="#{altaMBean.anticipo}" readonly="true" 
+                                                 placeholder="Anticipo:" >
+                                        <f:convertNumber pattern="###,###,###,###.00" />
+                                    </p:inputText>
+                                    
+                                </div>
+                            </div>
+                            
+                            
+                            
+                        </div>
+                        
+                        <div class="row form-group" >
+                            
+                            <div class="col-md-3">
+                                <p:outputLabel styleClass="sr-only " for="fechIni" value="Fecha Inicio" />
+                                <p:calendar id="fechIni" value="#{altaMBean.fechInicio}" required="true" placeholder="Fecha Inicio:" />
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <p:outputLabel styleClass="sr-only " for="fechFin" value="Fecha Final" />
+                                <p:calendar id="fechFin" value="#{altaMBean.fechFin}" required="true" placeholder="Fecha Final" />
+                            </div>
+
+                            <div class="col-md-3">
+                                <p:outputLabel styleClass="sr-only" for="cliente" value="Cliente: " />
+                                    <p:inputText styleClass="form-control" id="cliente" value="#{altaMBean.cliente}" required="true" onclick="PF('dialClte').show();" 
+                                             placeholder="Cliente:" />
+                            </div>
+
+                            <div class="col-md-3">
+                                <p:outputLabel styleClass="sr-only  " for="cCostos" value="Ctro. Costos: " />
+                                <p:inputText styleClass="form-control" id="cCostos" value="#{altaMBean.centroC}" onclick="PF('costos').show();"
+                                             placeholder="Centro de Costos:" required="true" />
+                            </div>
+                            
+                        </div>
+                        
+                    </p:fieldset>
+
+                    <p:fieldset legend="Dirección del Proyecto" style="margin-bottom: 20px" >
+                        
+                        <div class="row form-group" >
+                        
+                            <div class="col-md-9" >
+                                <p:outputLabel styleClass="sr-only" for="calle" value="Calle: *" />
+                                <p:inputText id="calle" value="#{altaMBean.calle}" styleClass="form-control"
+                                             placeholder="Calle:" required="true"/>
+                            </div>
+
+                            <div class="col-md-3" >
+                                <p:outputLabel for="numExt" value="Número Exterior: *" styleClass="sr-only" />
+                                <p:inputText id="numExt" value="#{altaMBean.numExt}" placeholder="Número Exterior:" 
+                                             styleClass="form-control" required="true" />
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row form-group" >
+                        
+                            <div class="col-md-3" >
+                                <p:outputLabel for="colonia" value="Colonia: *" styleClass="sr-only" />
+                                <p:inputText id="colonia" value="#{altaMBean.colonia}" styleClass="form-control"
+                                             placeholder="Colonia:" required="true" />
+                            </div>
+
+                            <div class="col-md-3">
+                                <p:outputLabel for="cp" value="Código Postal: *" styleClass="sr-only" />
+                                <p:inputText id="cp" value="#{altaMBean.codPst}" styleClass="form-control" 
+                                             placeholder="Código Postal:" required="true" />
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <p:outputLabel for="city" value="Ciudad: *" styleClass="sr-only"/>
+                                <p:inputText id="city" value="#{altaMBean.ciudad}" styleClass="form-control"
+                                             placeholder="Ciudad:" required="true" />
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <p:outputLabel for="ph" value="Teléfono: *" styleClass="sr-only" />
+                                <p:inputText id="ph" value="#{altaMBean.telefono}" styleClass="form-control" 
+                                             placeholder="Teléfono:" />
+                            </div>
+
+                        </div>
+                         
+                    </p:fieldset>
+
+                    <p:fieldset legend="Seguros y Fianzas" style="margin-bottom: 20px" >
+
+                        <div class="row form-group" >
+                            <div class="col-md-3 col-md-offset-3" >
+                                <h:outputText value="Porcentaje" style="margin-right: 40px"/>
+                            </div>
+                            <div class="col-md-3">
+                                <h:outputText value="Importe" />
+                            </div>
+                        </div>
+                        
+                        <div class="row form-group" >
+                            
+                            <div class="col-md-3" >
+                                <p:outputLabel styleClass="control-label" for="fGarantiaPct" value="Fondo de Garantía: " />
+                                
+                            </div>
+                            
+                            <div class="col-md-3" >
+                                <div class="input-group" >
+                                    <div class="input-group-addon" >%</div>
+                                    <p:inputText id="fGarantiaPct" value="#{altaMBean.pctGarantia}" 
+                                             styleClass="form-control" >
+                                        <p:ajax event="change" listener="#{altaMBean.calcularPctGarantia()}" 
+                                                update="fGarantia" />
+                                    </p:inputText>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3" >
+                                <p:inputText id="fGarantia" value="#{altaMBean.impGarantia}" readonly="true" 
+                                             styleClass="form-control" >
+                                    <f:convertNumber pattern="###,###,###,###.00" />
+                                </p:inputText>
+                            </div>
+                                
+                            
+                        </div>    
+
+
+                        <div class="row form-group" >
+                            <div class="col-md-3">
+                                <p:outputLabel for="fianzaAnt" value="Fianza de anticipo: " styleClass="control-label" />
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="input-group" >
+                                    <div class="input-group-addon">%</div>
+                                    <p:inputText id="fianzaAnt" value="#{altaMBean.pctFianzaAntcpo}" 
+                                                 styleClass="form-control" >
+
+                                        <p:ajax event="change" listener="#{altaMBean.calcularFianzaAntcpo()}"
+                                                   update="importeAnt, fianzaTot" />
+
+                                    </p:inputText>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <p:inputText id="importeAnt" value="#{altaMBean.impFianzaAntcpo}" 
+                                             styleClass="form-control" readonly="true" >
+                                    <f:convertNumber pattern="###,###,###,###.00" />
+                                </p:inputText>
+                            </div>
+                            
+                        </div>    
+
+                        <div class="row form-group" >
+                            
+                            <div class="col-md-3">
+                                <p:outputLabel for="fianzaCump" value="Fianza Cumplimiento: " styleClass="control-label" />
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="input-group" >
+                                    <div class="input-group-addon">%</div>
+                                    <p:inputText id="fianzaCump" value="#{altaMBean.pctCumplimiento}" 
+                                                 styleClass="form-control" >
+                                        <p:ajax event="change" listener="#{altaMBean.calcularImpCumplimiento()}" 
+                                                    update="importeCump, fianzaTot" />
+                                    </p:inputText>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <p:inputText id="importeCump" value="#{altaMBean.impCumplimiento}" 
+                                             styleClass="form-control" readonly="true" >
+                                    <f:convertNumber pattern="###,###,###,###.00" />
+                                </p:inputText>
+                            </div>
+                            
+                        </div>    
+                            
+                        <div class="row form-group" >
+                            
+                            <div class="col-md-3" >
+                                <p:outputLabel for="fianzaVic" value="Fianza Vicios Ocultos: " styleClass="control-label" />
+                            </div>
+                            
+                            <div class="col-md-3" >
+                                <div class="input-group" >
+                                    <div class="input-group-addon">%</div>
+                                    <p:inputText id="fianzaVic" value="#{altaMBean.pctVicios}" 
+                                                 styleClass="form-control" >
+
+                                        <p:ajax event="change" listener="#{altaMBean.calcularImpVicios()}" 
+                                               update="importeVic, fianzaTot" />
+                                    </p:inputText>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3" >
+                                <p:inputText id="importeVic" value="#{altaMBean.impVicios}" 
+                                             styleClass="form-control" readonly="true" >
+                                    <f:convertNumber pattern="###,###,###,###.00" />
+                                </p:inputText>
+                            </div>
+                            
+                        </div>    
+                            
+                        <div class="row form-group" >
+                            
+                            <div class="col-md-4">
+                                <p:outputLabel for="importeCiv" value="Responsabilidad Civil: " styleClass="label-control" />
+                                <p:inputText id="importeCiv" value="#{altaMBean.impRespCivil}" styleClass="form-control" >
+                                    <p:ajax event="change" listener="#{altaMBean.sumarRiesgos}" update="segurosTot" />
+                                </p:inputText>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <p:outputLabel for="importeTerceros" value="Todo Riesgo: " styleClass="label-control" />
+                                <p:inputText id="importeTerceros" value="#{altaMBean.impTerceros}" styleClass="form-control" >
+                                    <p:ajax event="change" listener="#{altaMBean.sumarRiesgos}" update="segurosTot" />
+                                </p:inputText>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <p:outputLabel for="otrsRiesg" value="Otras Fianzas: " styleClass="label-control" />
+                                <p:inputText id="otrsRiesg" value="#{altaMBean.otrosRiesg}" styleClass="form-control" />
+                            </div>
+                            
+                            
+                        </div>
+                        
+                        <p:outputLabel for="otros" value="Comentarios: " styleClass="label-control" />
+                        <p:inputTextarea id="otros" maxlength="200" cols="78"
+                                                 autoResize="false" 
+                                                 styleClass="form-control" value="#{altaMBean.otros}" />
+
+                    </p:fieldset>
+
+                    <p:fieldset legend="Totales" style="margin-bottom: 20px" >
+                        <center>
+                            <h:outputLabel for="conttoTot" value="Contrato: " />
+                            <p:inputText id="conttoTot" value="#{altaMBean.importeContto}" style="margin-left: 10px" readonly="true" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                                
+
+                            <h:outputLabel for="antcpoTot" value="Anticipos: " style="margin-left: 20px" />
+                            <p:inputText id="antcpoTot" value="#{altaMBean.cadAntcpo}" style="margin-left: 10px" readonly="true" />
+
+                            <h:outputLabel for="fianzaTot" value="Fianzas: " style="margin-left: 20px" />
+                            <p:inputText id="fianzaTot" value="#{altaMBean.sumaFianzas}" style="margin-left: 10px" 
+                                         readonly="true" >
+                            
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+
+                            <h:outputLabel for="segurosTot" value="Seguros: " style="margin-left: 20px" />
+                            <p:inputText id="segurosTot" value="#{altaMBean.sumaRiesCad}" style="margin-left: 10px" readonly="true" />
+                        </center>
+                    </p:fieldset>
+                    <br/>
+                    <br/>
+                    <p:commandButton value="Registrar" actionListener="#{altaMBean.crearRegistro}" 
+                                     update="msjRegistro" />
+
+                    <p:commandLink value="Volver a Menú Proyectos" style="margin-left: 90px"/>
+
+                    <h:link value="Lista Proyectos" outcome="listaProyectos" style="margin-left: 90px" />
+
+                    <br/>
+                    <br/>
+                    <h:outputText value="* Campos obligatorios" style="font-family: serif; font-size: smaller" />
+
+                </h:form>
+            </div>
+            
+        </p:panel>
+        
+        <p:dialog header="Elegir cliente" widgetVar="dialClte" resizable="false" modal="true" closeOnEscape="true" >
+                <h:form id="frmCte" >
+                    <p:dataTable id="tblClte" value="#{altaMBean.listCte}" var="cte" rowKey="#{cte.id_cliente}" 
+                                 selectionMode="single" paginator="true" rows="10" selection="#{altaMBean.cteSelected}" 
+                                 style="width: 600px" >
+
+                        <p:column headerText="Nombre o Razón Social" >
+                            <h:outputText value="#{cte.razon}" />
+                        </p:column>
+
+                        <p:column headerText="RFC" >
+                            <h:outputText value="#{cte.rfcCliente}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{altaMBean.seleccionarCliente}" oncomplete="PF('dialClte').hide();" 
+                                update=":formAlta:cliente" />
+
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+
+            <p:dialog header="Importe Contrato" widgetVar="dialImporte" resizable="false" modal="true">
+                <h:form>
+                    <h:outputText value="Capture el importe del contrato" />
+                    <p:inputText id="importe" value="#{altaMBean.importeContto}" />
+                    <p:commandButton id="btnImporte" value="Aceptar" 
+                                     actionListener="#{altaMBean.calculaPorcentajes}" 
+                                     update=":formAlta:impContto, :formAlta:conttoTot" oncomplete="PF('dialImporte').hide();"/>
+                </h:form>
+            </p:dialog>
+
+            <p:dialog header="Centro de Costos" widgetVar="costos" resizable="false" modal="true" closeOnEscape="true" >
+                <h:form id="frmCostos" style="max-width: 300px" >
+                <h:panelGrid columns="2" >
+                    
+                    <p:outputLabel for="serie" value="Serie:" />
+                    <p:inputText id="serie" value="#{altaMBean.serie}" />
+                    
+                    <p:outputLabel for="year" value="Año del Contrato:" />
+                    <p:inputText id="year" value="#{altaMBean.yearCntrt}" />
+                    
+                    <p:outputLabel for="month" value="Mes del Contrato" />
+                    <p:inputText id="month" value="#{altaMBean.monthCntr}"  />
+                    
+                    <p:commandButton id="btnCosto" value="Ok" actionListener="#{altaMBean.generarCosto}" 
+                                     oncomplete="PF('costos').hide();" update=":formAlta:cCostos" />
+                    
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+        
+        <h:outputScript library="js" name="bootstrap.js" />
+    </h:body>
+</html>
+

@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Solicitud de Requisición</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="cssLayout.css" />
+    </h:head>
+    <h:body>
+        <div class="container">
+            <h:form id="form" class="form-horizontal">
+                <p:growl id="growl" life="5000" showDetail="true" />
+                <p:panel id="panelDatosReq" header="Solicitud de Requisición" style="margin-bottom:20px">
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="nombreProyecto" value="Proyecto: *" /> 
+                            <p:inputText id="nombreProyecto" size="50" readonly="true" 
+                                         placeholder="Clic aquí para seleccionar proyecto" 
+                                         value="#{formProyectosMB.nombreProyecto}" required="true" 
+                                         label="nombreProyecto" onclick="PF('dlg1').show();" styleClass="form-control" />  
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="noPresupuesto" value="No Presupuesto *" /> 
+                            <p:inputText id="noPresupuesto" size="50" readonly="true" placeholder="Clic aquí para seleccionar presupuesto" 
+                                         value="#{formProyectosMB.noPresupuesto}" onclick="PF('dlg2').show();" 
+                                         label="noPresupuesto" styleClass="form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="noRequisicion" value="No. de Requisicion:" /> 
+                            <p:inputText id="noRequisicion" value="#{formRequisicionMB.idRequisicion}" size="40" 
+                                         readonly="true" label="noRequisicion" styleClass="form-control" />  
+                            
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="estatus" value="Estatus *" /> 
+                            <p:inputText id="estatus" value="#{formRequisicionMB.estatus}" size="40" readonly="true" 
+                                         label="estatus" styleClass="form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="fechaRequisición" value="Fecha de Requisición: " /> 
+                            <p:inputText id="fechaRequisición" value="#{formRequisicionMB.fechaSolicitud}" size="40" 
+                                         readonly="true" label="fechaRequisición" styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="solicitante" value="Solicitante: " /> 
+                            <p:inputText id="solicitante" value="#{formRequisicionMB.nombreUsuarioSolicitante}" 
+                                         size="40" readonly="true" label="solicitante" styleClass="form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="autoriza" value="Autoriza: " /> 
+                            <p:inputText id="autoriza" value="#{formRequisicionMB.nombreUsuarioAutorizacion}" 
+                                         size="40" readonly="true" label="autoriza" styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="fechaautorizacion" value="Fecha de autorización: " /> 
+                            <p:inputText id="fechaautorizacion" value="#{formRequisicionMB.fechaAutorizacion}" 
+                                         size="40" readonly="true" label="fechaautorizacion" styleClass="form-control" />
+                        </div>
+                    </div>
+                    
+                   
+
+                    <p:commandButton value="AGREGAR INSUMOS" type="button" onclick="PF('dlgins').show();" />
+                    <!--<p:commandButton value="ELIMINAR INSUMOS" update=":form3:tablaInsumosSol,:form:tablaInsumos" actionListener="" />-->
+                    <p:commandButton value="SOLICITAR" update=":form:growl,:form:noRequisicion,:form:fechaautorizacion" actionListener="#{procesarRequisicionMB.guardarRequisicion}" />
+                    <!--<p:commandButton value="IMPRIMIR" action="comprobanteRequisicion.xhtml" actionListener="impresionSolRequisicionMB.verImpresion()"  icon="ui-icon-print" style="display:block;margin-bottom: 20px"/>-->
+
+                </p:panel>
+
+                <p:panel id="panelInsumos" header="Listado de Insumos, Total: #{formProyectosMB.listInsumosSol.size()} "  style="margin-bottom:20px">
+
+                    <p:dataTable id ="tablaInsumos" rows="10" paginator="true" editable="true" editMode="cell"  emptyMessage=" *** SIN INSUMOS *** " 
+                                 var="ins"  rowKey="#{ins.idInsumoTabla}" selection="#{formProyectosMB.selectedInsumoSol}"  
+                                 value="#{formProyectosMB.listInsumosSol}">
+
+                        <p:column selectionMode="multiple" style="width:40px;text-align:center"/>
+
+                        <p:column headerText="Código Insumo">
+                            <h:outputText value="#{ins.clave}" />
+                        </p:column>
+
+                        <p:column headerText="Insumo">
+                            <h:outputText value="#{ins.concepto}" />
+                        </p:column>
+                        <p:column headerText="Unidades">
+                            <h:outputText value="#{ins.unidades}" />
+                        </p:column>
+
+                        <p:column id="cantidadDisp" headerText="Cantidad Disponible" >
+                            <h:outputText value="#{ins.cantDisponible}" >
+                                <f:convertNumber pattern="###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column id="cantidadDisponible" headerText="Cantidad x Solicitar">
+                            <p:cellEditor id="cantidadEdit">
+                                <f:facet name="output">
+                                    <p:inputText value="#{ins.cantDisponible}" >
+                                        <f:convertNumber pattern="###,###,###.00" />
+                                    </p:inputText>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{ins.cantDisponible}" style="width:100%" >
+                                        <f:convertNumber pattern="###,###,###.00" />
+                                    </p:inputText>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        
+                        <p:column headerText="Eliminar" >
+                            <p:commandButton id="btnElim" value="Eliminar" action="#{formProyectosMB.eliminarInsumos()}"
+                                         oncomplete="onDeleteIns();"  >
+                                <f:setPropertyActionListener value="#{ins}" target="#{formProyectosMB.insElim}" />
+                            </p:commandButton>
+                        </p:column>
+                        
+                        <p:ajax event="cellEdit" update=":form:tablaInsumos,:form:growl" 
+                                listener="#{formProyectosMB.onCellEdit}" />
+                    </p:dataTable>
+                    <p:remoteCommand name="onDeleteIns" update="tablaInsumos" />
+
+                </p:panel>
+            </h:form>
+
+            <p:dialog header="Seleccione un Proyecto" widgetVar="dlg1" modal="true" closable="true" resizable="false" closeOnEscape="true" >
+
+                <h:form id="form1">
+                    <p:dataTable id="proyectos" rows="5" paginator="true"  var="proy"  rowKey="#{proy.idProyecto}"  selectionMode="single" 
+                                 selection="#{formProyectosMB.selectedProyecto}"  value="#{formProyectosMB.listProyectos}" style="width: 460px" >
+
+                        <p:ajax event="rowSelect" update=":form:nombreProyecto,:form:noPresupuesto, :form:panelInsumos, :form2:tablaPresupuesto" oncomplete="PF('dlg1').hide()"  listener="#{formProyectosMB.buscarPresupuestos}" />
+
+                        <p:column headerText="Num.">
+                            <h:outputText value="#{proy.idProyecto}" />
+                        </p:column>
+
+                        <p:column headerText="Proyecto">
+                            <h:outputText value="#{proy.proyecto}" />
+                        </p:column>
+                    </p:dataTable>
+
+                </h:form>
+            </p:dialog> 
+
+            <p:dialog header="Seleccione un Presupuesto" widgetVar="dlg2" modal="true" closable="true" resizable="false" closeOnEscape="true" >
+                <h:form id="form2">
+                    <p:dataTable id ="tablaPresupuesto" rows="5" paginator="true"  
+                                 emptyMessage="No se tienen Presupuestos para este Proyecto" var="pres"  rowKey="#{pres.idPresupuesto}"  
+                                 selectionMode="single" selection="#{formProyectosMB.selectedPresupuesto}"  
+                                 value="#{formProyectosMB.listPresupuesto}" style="width: 460px" >
+
+                        <p:ajax event="rowSelect" update=":form:noPresupuesto,:form3:tablaInsumosSol" oncomplete="PF('dlg2').hide()" 
+                                listener="#{formProyectosMB.listarInsumos}" />
+
+                        <p:column headerText="Num.">
+                            <h:outputText value="#{pres.idPresupuesto}" />
+                        </p:column>
+
+                        <p:column headerText="Proyecto">
+                            <h:outputText value="#{pres.presupuesto}" />
+                        </p:column>
+                    </p:dataTable>
+
+                </h:form>
+            </p:dialog>
+
+
+
+            <p:dialog header="Seleccione Insumo" widgetVar="dlgins" modal="true" closable="true" resizable="false" closeOnEscape="true" >
+                <h:form id="form3">
+                    <p:commandButton value="AGREGAR INSUMOS"  actionListener="#{formProyectosMB.agregarInsumos}" oncomplete="PF('dlgins').hide()" update=":form3:tablaInsumosSol,:form:panelInsumos" />
+                    <br />
+                    <p:dataTable id ="tablaInsumosSol" rows="10" paginatorTemplate="{CurrentPageReport}  
+                                 {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                 {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15" paginator="true"  emptyMessage=" *** SIN INSUMOS *** " 
+                                 var="ins"  rowKey="#{ins.idInsumoTabla}"  value="#{formProyectosMB.listInsumos}" 
+                                 selection="#{formProyectosMB.selectedInsumo}">
+                        <p:column selectionMode="multiple" style="width:40px; text-align:center"/>
+                        <p:column headerText="Num.">
+                            <h:outputText value="#{ins.idInsumoTabla}" />
+                        </p:column>
+
+                        <p:column headerText="Código Insumo" filterBy="#{ins.clave}" filterMatchMode="contains" >
+                            <h:outputText value="#{ins.clave}" />
+                        </p:column>
+
+                        <p:column headerText="Insumo" filterBy="#{ins.concepto}" filterMatchMode="contains" >
+                            <h:outputText value="#{ins.concepto}" />
+                        </p:column>
+
+
+                        <p:column headerText="Unidades">
+                            <h:outputText value="#{ins.unidades}" />
+                        </p:column>
+
+                        <p:column headerText="Cantidad Presupuestada">
+                            <h:outputText value="#{ins.cantPresupuestada}" >
+                            <f:convertNumber pattern="###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column id="cantidadDisponible" headerText="Cantidad Disponible">
+                            <h:outputText value="#{ins.cantDisponible}" >
+                            <f:convertNumber pattern="###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+
+                </h:form>
+            </p:dialog>
+        </div>
+            
+        
+        <h:outputScript library="js" name="bootstrap.js" />
+    </h:body>
+</html>
+

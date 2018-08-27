@@ -1,0 +1,268 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Presupuesto</title>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="cssLayout.css" />
+    </h:head>
+    <h:body>
+        
+        <div class="container">
+            <h:form id="formBuscar" class="form-horizontal" >
+                <p:growl id="growl" showDetail="true" life="5000" />
+                <p:panel header="Presupuesto Proforma">
+                    <div class="row form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="txtProyecto" value="Proyecto: " />
+                            <p:inputText id="txtProyecto" value="#{vistaDos.proyecto}" onclick="PF('dialProy').show();" 
+                                      styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="txtPrespto" value="Presupuesto: " />
+                            <p:inputText id="txtPrespto" value="#{vistaDos.presupuesto}" onclick="PF('dialPres').show();"
+                                         styleClass="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group" >
+                        <div class="col-md-6" >
+                            <p:commandButton id="btnVer" value="Buscar" 
+                                             actionListener="#{vistaDos.listarConceptos()}" 
+                                             update="tblV2, :frmPartida:tblFirstLvl, subtot, btnCompras"/>
+                            <p:commandButton id="btnCancelar" value="Limpiar" actionListener="#{vistaDos.refresh()}" 
+                                             update="formBuscar" />
+                            
+                            
+                        </div>
+                        <div class="col-md-6" >
+                            
+                        </div>
+                    </div>
+
+                    <div class="row form-group" >
+                        <div class="col-md-3" >
+                            <h:outputLabel for="part" value="Partida: " />
+                            <p:inputText id="part" value="#{vistaDos.partida}" onclick="PF('dialLvl').show();" 
+                                         styleClass="form-control" />
+                        </div>
+                        <div class="col-md-3" >
+                            <h:outputLabel for="subPart" value="Sub Partida:" />
+                            <p:inputText id="subPart" value="#{vistaDos.subPartida}" onclick="PF('dialSubPrt').show();"
+                                         styleClass="form-control" />
+                        </div>
+                        
+                        <div class="col-md-6" >
+                            <br/>
+                            <p:commandButton id="btnFiltro" value="Filtrar" actionListener="#{vistaDos.filters}" 
+                                         update="tblV2, subtot" />
+                            <p:commandButton id="btnClean" value="Limpiar" actionListener="#{vistaDos.cleanFields}" 
+                                         update="part, subPart, tblV2" />
+                            <p:commandButton id="btnCompras" value="Autorizar presupuesto" 
+                                             actionListener="#{vistaDos.cargarTablaExplosion()}" 
+                                             disabled="#{vistaDos.btnAutorizar}" update="growl" />
+                        </div>
+                        
+                        
+                    </div>
+
+                    <div class="row form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="subtot" value="Suma por Filtro:" />
+                            <p:inputText id="subtot" value="#{vistaDos.sumaFiltro}" 
+                                         styleClass="form-control" style="text-align: right" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                            
+                        </div>
+                    </div>
+
+                    <p:dataTable id="tblV2" value="#{vistaDos.list}" var="conc" rowKey="#{conc.id_concepto}" 
+                                 selectionMode="single" selection="#{vistaDos.concept}" paginator="true" rows="10"
+                                 filteredValue="#{vistaDos.listFilt}" >
+                        
+                        <f:facet name="header">
+                            Conceptos del Presupuesto #{vistaDos.presupuesto}
+                        </f:facet>
+
+
+
+                        <p:column headerText="Cod. Concepto" filterBy="#{conc.codConcepto}" filterMatchMode="contains" >
+                            <h:outputText value="#{conc.codConcepto}" />
+                        </p:column>
+
+                        <p:column headerText="Descripcion" style="font-size: smaller" filterBy="#{conc.descripcion}"
+                                  filterMatchMode="contains" >
+                            <h:outputText value="#{conc.descripcion}" />
+                        </p:column>
+
+                        <p:column headerText="Unidad" filterBy="#{conc.unidad}"
+                                  filterMatchMode="contains" >
+                            <h:outputText value="#{conc.unidad}" />
+                        </p:column>
+
+                        <p:column headerText="Cantidad" >
+                            <h:outputText value="#{conc.cadCant}" />
+                        </p:column>
+
+                        <p:column headerText="P. Unitario" >
+                            <h:outputText value="#{conc.cadPrecio}" />
+                        </p:column>
+
+                        <p:column headerText="Importe" >
+                            <h:outputText value="#{conc.cadImp}" />
+                        </p:column>
+
+                        <p:column>
+                            <p:commandButton id="btnElim" value="Eliminar" action="#{vistaDos.eliminarConcp()}"
+                                         oncomplete="onDeleteCncp();" >
+                                <f:setPropertyActionListener value="#{conc}" target="#{vistaDos.concpElim}" />
+                            </p:commandButton>    
+                        </p:column>
+                        
+                        
+
+                        <p:ajax event="rowSelect" listener="#{vistaDos.listarInsumos}" 
+                                update=":frmIns:tblIns"
+                                oncomplete="PF('dialIns').show();" />
+
+                    </p:dataTable>
+                    <p:remoteCommand name="onDeleteCncp" update="tblV2" />
+                
+                </p:panel>
+            </h:form>
+            
+            
+            
+            
+        
+        
+            <p:dialog header="Proyectos" widgetVar="dialProy" resizable="false" modal="true" width="400px" closeOnEscape="true" >
+                <h:form>
+                    <p:dataTable id="tblProy" value="#{vistaDos.listaProy}" var="p" rowKey="#{p.id_proyecto}" 
+                                 selection="#{vistaDos.proySel}" selectionMode="single" 
+                             paginator="true" rows="15" scrollable="true" style="width: 360px">
+
+                    <p:column headerText="No. Proyecto"  >
+                        <h:outputText value="#{p.id_proyecto}" />
+                    </p:column>
+
+                    <p:column headerText="Proyecto"  >
+                        <h:outputText value="#{p.proyecto}" />
+                    </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{vistaDos.obtenerProyecto}" 
+                            update=":formBuscar:txtProyecto,:presForm:tblPres"
+                            oncomplete="PF('dialProy').hide();" />
+
+                </p:dataTable>
+                </h:form>
+            </p:dialog>
+
+            <p:dialog header="Presupuesto" widgetVar="dialPres" resizable="false" modal="true" width="400px" closeOnEscape="true" >
+                <h:form id="presForm" >
+                    <p:dataTable id="tblPres" value="#{vistaDos.listaPres}" var="pres" rowKey="#{pres.id_presupuesto}" 
+                                 selection="#{vistaDos.presB}" selectionMode="single" 
+                             paginator="true" scrollable="true" style="width: 360px">
+
+                    <p:column headerText="No. Presupuesto"  >
+                        <h:outputText value="#{pres.id_presupuesto}" />
+                    </p:column>
+
+                    <p:column headerText="Presupuesto"  >
+                        <h:outputText value="#{pres.presupuesto}" />
+                    </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{vistaDos.obtenerPresupuesto}" update=":formBuscar:txtPrespto"
+                            oncomplete="PF('dialPres').hide();" />
+
+                </p:dataTable>
+                </h:form>
+            </p:dialog>
+
+            <p:dialog header="Partida" widgetVar="dialLvl" resizable="false" modal="true" closeOnEscape="true" >
+                <h:form id="frmPartida">
+                    <p:dataTable id="tblFirstLvl" value="#{vistaDos.levels}" var="lvl" rowKey="#{lvl.id_partida}" 
+                                 selection="#{vistaDos.lvl}" selectionMode="single" 
+                             paginator="true" rows="15">
+
+                        <p:column headerText="Partida" >
+                            <h:outputText value="#{lvl.nivel}" />
+                        </p:column>
+
+                        <p:column headerText="Descripcion" >
+                            <h:outputText value="#{lvl.descripcion}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{vistaDos.setFirstLevel}" 
+                            update=":frmSubPrt:tblSubPrt, :formBuscar:part"
+                            oncomplete="PF('dialLvl').hide();" />
+
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+
+            <p:dialog header="Sub Partida" widgetVar="dialSubPrt" resizable="false" modal="true" closeOnEscape="true" >
+                <h:form id="frmSubPrt" >
+                    <p:dataTable id="tblSubPrt" value="#{vistaDos.secLevels}" var="lvl2" rowKey="#{lvl2.id_partida}" 
+                                 selectionMode="single" selection="#{vistaDos.seclvl}" paginator="true" rows="15" >
+
+                        <p:column headerText="SubPartida">
+                            <h:outputText value="#{lvl2.nivel}" />
+                        </p:column>
+
+                        <p:column headerText="Descripción">
+                            <h:outputText value="#{lvl2.descripcion}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{vistaDos.setSecLevel()}" 
+                            update=":formBuscar:subPart"
+                            oncomplete="PF('dialSubPrt').hide();" />
+
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+
+            <p:dialog header="Insumos" widgetVar="dialIns" resizable="false" modal="true" closeOnEscape="true" >
+                <h:form id="frmIns" >
+                    <p:dataTable id="tblIns" value="#{vistaDos.listaIns}" var="ins" rowKey="#{ins.id_insumo}" >
+
+                        <p:column headerText="Cod. Insumo" >
+                            <h:outputText value="#{ins.codInsumo}" />
+                        </p:column>
+
+                        <p:column headerText="Insumo" >
+                            <h:outputText value="#{ins.descripIns}" />
+                        </p:column>
+                        
+                        <p:column headerText="Unidad" >
+                            <h:outputText value="#{ins.unidadIns}" />
+                        </p:column>
+                        
+                        <p:column headerText="Costo Insumo" >
+                            <h:outputText value="#{ins.costoInsCtrl}" />
+                        </p:column>
+
+                        <p:column headerText="Cantidad" >
+                            <h:outputText value="#{ins.cantInsCtrl}" />
+                        </p:column>
+
+                        <p:column headerText="Importe" >
+                            <h:outputText value="#{ins.impInsCtrl}" />
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+        </div>
+            
+            
+        <h:outputScript library="js" name="bootstrap.js" />
+    </h:body>
+</html>
+

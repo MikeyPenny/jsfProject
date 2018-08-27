@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Presupuestos</title>
+        
+    </h:head>
+    <h:body>
+        <p:panel header="Presupuesto Venta" footer="Búsqueda Presupuesto" >
+            <h:form id="formBuscar" >
+            <h:panelGrid columns="4" >
+                
+                <h:outputLabel for="txtProyecto" value="Proyecto: " />
+                <p:inputText id="txtProyecto" value="#{presptoMBean.proyecto}" onclick="PF('dialProy').show();" 
+                             style="width: 350px"/>
+                
+                <h:outputLabel for="txtPrespto" value="Presupuesto: " />
+                <p:inputText id="txtPrespto" value="#{presptoMBean.presupuesto}" onclick="PF('dialPres').show();" />
+                
+                <br/>
+                <br/>
+                <br/>
+                <h:panelGroup/>
+                <p:commandButton id="btnVer" value="Buscar" 
+                                 action="#{vistaDos.listarConceptos(presptoMBean.id_proyecto, presptoMBean.id_presupuesto)}" 
+                                 />
+                
+                
+                <p:commandButton id="btnCancelar" value="Limpiar" />
+                
+            </h:panelGrid>
+            </h:form>
+            
+            
+            
+        </p:panel>
+        
+        <p:dialog header="Proyectos" widgetVar="dialProy" resizable="false" modal="true" width="400px" closeOnEscape="true" >
+            <h:form>
+            <p:dataTable id="tblProy" value="#{presptoMBean.listaProy}" var="p" rowKey="#{p.id_proyecto}" 
+                         selection="#{presptoMBean.proySel}" selectionMode="single" 
+                         paginator="true" rows="15" scrollable="true" style="width: 360px">
+
+                <p:column headerText="No. Proyecto"  >
+                    <h:outputText value="#{p.id_proyecto}" />
+                </p:column>
+
+                <p:column headerText="Proyecto"  >
+                    <h:outputText value="#{p.proyecto}" />
+                </p:column>
+
+                <p:ajax event="rowSelect" listener="#{presptoMBean.obtenerProyecto}" 
+                        update=":formBuscar:txtProyecto,:presForm:tblPres"
+                        oncomplete="PF('dialProy').hide();" />
+
+            </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+        <p:dialog header="Presupuesto" widgetVar="dialPres" resizable="false" modal="true" width="400px" closeOnEscape="true" >
+            <h:form id="presForm" >
+                <p:dataTable id="tblPres" value="#{presptoMBean.listaPres}" var="pres" rowKey="#{pres.id_presupuesto}" 
+                             selection="#{presptoMBean.presB}" selectionMode="single" 
+                         paginator="true" scrollable="true" style="width: 360px">
+
+                <p:column headerText="No. Presupuesto"  >
+                    <h:outputText value="#{pres.id_presupuesto}" />
+                </p:column>
+
+                <p:column headerText="Presupuesto"  >
+                    <h:outputText value="#{pres.presupuesto}" />
+                </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{presptoMBean.obtenerPresupuesto}" update=":formBuscar:txtPrespto"
+                        oncomplete="PF('dialPres').hide();" />
+
+            </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+    </h:body>
+    
+    
+    
+</html>
+

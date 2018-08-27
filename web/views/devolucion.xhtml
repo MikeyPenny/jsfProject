@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core" >
+    <h:head>
+        <title>Devoluciones</title>
+    </h:head>
+    <h:body>
+        <h:form id="form1">
+            <p:dialog header="Seleccione un Proyecto" widgetVar="dlg1" modal="true" closable="true" 
+                      resizable="false" closeOnEscape="true" >
+                <p:dataTable id="proyectos" rows="5" paginator="true"  var="proy"  rowKey="#{proy.idProyecto}"  
+                             selectionMode="single" selection="#{devolucionMB.selectedProyecto}"  
+                             value="#{devolucionMB.listProyectos}" style="width: 460px" >
+
+                    <p:ajax event="rowSelect" update=":form:nombreProyecto,:form2:ordencompraTabla" oncomplete="PF('dlg1').hide()" listener="#{devolucionMB.listarOrdenesCompra}" />
+
+                    <p:column headerText="Num.">
+                        <h:outputText value="#{proy.idProyecto}" />
+                    </p:column>
+
+                    <p:column headerText="Proyecto">
+                        <h:outputText value="#{proy.proyecto}" />
+                    </p:column>
+
+                </p:dataTable>
+            </p:dialog>
+        </h:form>
+        
+         <h:form id="form2">
+            <p:dialog header="Seleccione la orden de compra" widgetVar="dlg2" modal="true" closable="true" 
+                      resizable="false" closeOnEscape="true" >
+                <p:dataTable id="ordencompraTabla" rows="5" paginator="true"  var="oc"  rowKey="#{oc.idOrdenCompra}"  
+                             selectionMode="single" selection="#{devolucionMB.selectedOc}"  
+                             value="#{devolucionMB.listOc}" style="width: 460px" >
+                    <p:ajax event="rowSelect" update=":form:idOc,:form:proveedor,:form3:recepcionTabla" oncomplete="PF('dlg2').hide()"  listener="#{devolucionMB.listarRecepciones}" />
+
+                    <p:column headerText="No Orden Compra.">
+                        <h:outputText value="#{oc.idOrdenCompra}" />
+                    </p:column>
+
+                    <p:column headerText="Provedor">
+                        <h:outputText value="#{oc.nombreProvedor}" />
+                    </p:column>
+
+                </p:dataTable>
+            </p:dialog>
+        </h:form>
+        
+        <h:form id="form3">
+            <p:dialog header="Seleccione la Recepcion a devolver" widgetVar="dlg3" modal="true" closable="true" 
+                      resizable="false" closeOnEscape="true" >
+                <p:dataTable id="recepcionTabla" rows="5" paginator="true"  var="re"  rowKey="#{re.idRecepcion}"  
+                             selectionMode="single" selection="#{devolucionMB.selectedRecepcion}"  
+                             value="#{devolucionMB.listRecepciones}" style="width: 460px" >
+                    <p:ajax event="rowSelect" update=":form:recepcion,:form:fechaRecepcion,:form:tablaInsumos" oncomplete="PF('dlg3').hide()" listener="#{devolucionMB.listarInsumos}" />
+
+                    <p:column headerText="No Recepción.">
+                        <h:outputText value="#{re.noRecepcion}" />
+                    </p:column>
+
+                    <p:column headerText="Fecha de Recepción">
+                        <h:outputText value="#{re.fechaRecepcion}" />
+                    </p:column>
+                    
+
+                </p:dataTable>
+            </p:dialog>
+        </h:form>
+        
+        <h:form id="form" >
+            <p:growl id="growl" life="5000" showDetail="true" />
+            <p:panel id="panelProyecto" header="Datos de Proyecto" style="margin-bottom:20px">
+                <h:panelGrid columns="4" cellpadding="10">
+                    
+                    <h:outputLabel for="nombreProyecto" value="Proyecto*:" /> 
+                    <p:inputText id="nombreProyecto" size="50" readonly="true" placeholder="Clic aquí para seleccionar proyecto" value="#{devolucionMB.nombreProyecto}" required="true" label="nombreProyecto" onclick="PF('dlg1').show();" />  
+                    
+                    <h:outputLabel for="idOc" value="Orden Compra*:" /> 
+                    <p:inputText id="idOc" size="10" readonly="true" placeholder="Clic aquí para seleccionar" value="#{devolucionMB.numOrc}" required="true" label="idOc" onclick="PF('dlg2').show();" />  
+
+                    <h:outputLabel for="recepcion" value="Recepción*:" /> 
+                    <p:inputText id="recepcion" size="10" readonly="true" value="#{devolucionMB.recepcion}" label="recepcion" onclick="PF('dlg3').show();"/>  
+                    
+                    <h:outputLabel for="devolucion" value="No. Devolución" /> 
+                    <p:inputText id="devolucion" size="50" readonly="true" value="#{devolucionMB.devolucion}" label="devolucion" />  
+                    
+                    
+                    <h:outputLabel for="proveedor" value="Proveedor*:" /> 
+                    <p:inputText id="proveedor" size="60" readonly="true" value="#{devolucionMB.nombreProveedor}" label="proveedor" />  
+                    
+                    <h:outputLabel for="fechaRecepcion" value="Fecha Recepción*:" /> 
+                    <p:inputText id="fechaRecepcion" size="60" readonly="true" value="#{devolucionMB.fechaRecepcion}" label="fechaRecepcion" />  
+                    
+                </h:panelGrid>
+                
+                 <h:panelGrid columns="2" cellpadding="5">
+                     <p:commandButton value="AUTORIZAR" update="growl,panelProyecto" actionListener="#{devolucionMB.autorizarDevolucion}"/>
+                </h:panelGrid>
+                
+            </p:panel>
+            
+            <p:panel id="panelInsumos" header="Datos de Proyecto" style="margin-bottom:20px">
+                 <p:dataTable id ="tablaInsumos" editable="true" editMode="cell" emptyMessage="Seleccione Recepción" var="ins" value="#{devolucionMB.listInsumos}"  rowKey="#{ins.idInsumo}" >
+                    <p:ajax event="cellEdit" update=":form:tablaInsumos,:form:growl" listener="#{devolucionMB.onCellEdit}"/>
+                  
+                    <p:column headerText="Clave Insumo">
+                        <h:outputText value="#{ins.cveInsumo}" />
+                    </p:column>
+
+                    <p:column headerText="Insumo">
+                        <h:outputText value="#{ins.descripcion}" />
+                    </p:column>
+
+                    <p:column headerText="Unidad">
+                        <h:outputText value="#{ins.unidad}" />
+                    </p:column>
+                    
+                    <p:column headerText="Recibido">
+                        <h:outputText value="#{ins.recibido}" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Consumido">
+                        <h:outputText value="#{ins.consumido}" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="En almacen">
+                        <h:outputText value="#{ins.recibido-ins.consumido}" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Devoluciones">
+                        <h:outputText value="#{ins.devuelto}" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Cantidad">
+                        <p:cellEditor id="cantidadEdit">
+                            <f:facet name="output"><p:inputText value="#{ins.cantidad}" >
+                        <f:convertNumber pattern="###,###,###.00" />
+                        </p:inputText></f:facet>
+                            <f:facet name="input"><p:inputText value="#{ins.cantidad}"><f:convertNumber pattern="###,###,###.00" /></p:inputText></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                </p:dataTable>
+            </p:panel>
+            
+        </h:form>
+    </h:body>
+</html>
+

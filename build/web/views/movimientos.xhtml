@@ -1,0 +1,235 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Aplicar pago</title>
+    </h:head>
+    <h:body>
+        <h:form id="frmMovs" >
+            <p:panel header="Movimientos" footer="Registrar y revisar movimientos por factura" >
+                <p:messages id="msg" showDetail="true" autoUpdate="true" closable="true" />
+                <h:panelGrid id="grdBusq" columns="4" >
+                    <h:outputLabel for="proy" value="Proyecto" />
+                    <p:inputText id="proy" value="#{movimientosMB.proyecto}" onclick="PF('tabProy').show();" />
+
+                    <h:outputLabel for="pres" value="Presupuesto" />
+                    <p:inputText id="pres" value="#{movimientosMB.presupuesto}" onclick="PF('tabPres').show();" />
+
+                    <h:outputLabel for="est" value="Estimación" />
+                    <p:inputText id="est" value="#{movimientosMB.estimacion}" onclick="PF('dialEstim').show();" />
+                </h:panelGrid>
+                
+                <h:outputLabel for="tblFact" value="Facturas" /> 
+                <p:dataTable id="tblFact" value="#{movimientosMB.listFact}" var="fac" rowKey="#{fac.id_factura}" 
+                             selection="#{movimientosMB.factSel}" paginator="true" rows="10" selectionMode="single" >
+                    
+                    
+                    <p:column headerText="No. Factura" >
+                        <h:outputText value="#{fac.noFactura}" />
+                    </p:column>
+                    
+                    <p:column headerText="Importe" >
+                        <h:outputText value="#{fac.importeEst}" />
+                    </p:column>
+                    
+                    <p:column headerText="Subtotal" >
+                        <h:outputText value="#{fac.subtotal}" />
+                    </p:column>
+                    
+                    <p:column headerText="IVA" >
+                        <h:outputText value="#{fac.iva}" />
+                    </p:column>
+                    
+                    <p:column headerText="Total" >
+                        <h:outputText value="#{fac.total}" />
+                    </p:column>
+                    
+                    <p:column headerText="Fecha" >
+                        <h:outputText value="#{fac.fechaFact}" />
+                    </p:column>
+                    
+                    <p:ajax event="rowSelect" listener="#{movimientosMB.seleccionarFactura}" 
+                            update=":frmMovs:grdFact" />
+                    
+                </p:dataTable>
+                <br/>
+                <h:panelGrid id="grdFact" columns="4" >
+                    
+                    <h:outputLabel for="noFact" value="No. Factura" />
+                    <p:inputText id="noFact" value="#{movimientosMB.noFactura}" readonly="true" />
+                    
+                    <h:outputLabel for="fechaFac" value="Fecha de Factura" />
+                    <p:inputText id="fechaFac" value="#{movimientosMB.fechaFact}" readonly="true" />
+                    
+                    <h:outputLabel for="impEst" value="Importe Estimación" />
+                    <p:inputText id="impEst" value="#{movimientosMB.importeEst}" readonly="true" />
+                    
+                    <h:outputLabel for="otrasDed" value="Otras Deductivas" />
+                    <p:inputText id="otrasDed" value="#{movimientosMB.otrasDed}" readonly="true" />
+                    
+                    <h:outputLabel for="amortAnt" value="Amortización de Anticipo" />
+                    <p:inputText id="amortAnt" value="#{movimientosMB.amortAntcpo}" readonly="true" />
+                    
+                    <h:outputLabel for="gtiaDesIva" value="Garantía Después de IVA" />
+                    <p:inputText id="gtiaDesIva" value="#{movimientosMB.gtiDesIVA}" readonly="true" />
+                    
+                    <h:outputLabel for="retGtia" value="Retención de Garantía" />
+                    <p:inputText id="retGtia" value="#{movimientosMB.retGtia}" readonly="true" />
+                    
+                    <h:outputLabel for="pctIva" value="Porcentaje de IVA" />
+                    <p:inputText id="pctIva" value="#{movimientosMB.pctIva}" readonly="true" />
+                    
+                    <h:outputLabel for="subt" value="Subtotal" />
+                    <p:inputText id="subt" value="#{movimientosMB.subtotal}" readonly="true" />
+                    
+                    <h:panelGroup/>
+                    <h:panelGroup/>
+                    
+                    <h:outputLabel for="iva" value="IVA" />
+                    <p:inputText id="iva" value="#{movimientosMB.iva}" readonly="true" />
+                    
+                    <h:panelGroup/>
+                    <h:panelGroup/>
+                    
+                    <h:outputLabel for="total" value="Total" />
+                    <p:inputText id="total" value="#{movimientosMB.total}" readonly="true" />
+                    
+                    <h:panelGroup/>
+                    <h:panelGroup/>
+                    
+                    <h:outputLabel for="pagAplic" value="Pago por aplicar" />
+                    <p:inputText id="pagAplic" value="#{movimientosMB.pagoAplicado}" >
+                        <p:ajax event="change" listener="#{movimientosMB.validarImporte}" update="pagAplic" />
+                    </p:inputText>
+                    
+                    <p:commandButton id="btnAplicar" value="Aplicar Pago" 
+                                     actionListener="#{movimientosMB.aplicarMovimiento}" />
+                    
+                    <!--<p:commandButton id="btnMovs" value="Ver Movimientos" actionListener=""
+                                     update=":frmListMovs:tblMovs, :frmListMovs:grdTblMovs" 
+                                     oncomplete="PF('dialMovs').show();" />-->
+                    
+                    <h:outputLabel for="fechMov" value="Fecha del Movimiento" />
+                    <p:inputText id="fechMov" value="#{movimientosMB.fechaMov}"  />
+                    
+                </h:panelGrid>
+                
+                <br/>
+                
+                <h:panelGrid id="grdAplicPago" columns="4" >
+                    
+                    
+                    
+                </h:panelGrid>
+                
+            </p:panel>
+        </h:form>
+        
+        <p:dialog widgetVar="tabProy" resizable="false" header="Proyectos" modal="true" closeOnEscape="true" 
+                  closable="true" >
+            <h:form id="frmProy">
+                <p:dataTable id="tblProy" value="#{movimientosMB.listProy}" var="proy" selection="#{movimientosMB.ps}"
+                             selectionMode="single" rowKey="#{proy.id_proyecto}" style="width: 600px" >
+
+                    <p:column headerText="No.Proyecto" >
+                        <h:outputText value="#{proy.id_proyecto}" />
+                    </p:column>
+
+                    <p:column headerText="Proyecto" >
+                        <h:outputText value="#{proy.proyecto}" />
+                    </p:column>
+
+                    <p:column headerText="Cliente" >
+                        <h:outputText value="#{proy.cliente}" />
+                    </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{movimientosMB.seleccionarProyect}" 
+                            update=":frmMovs:proy, :frmPres:tblPres" oncomplete="PF('tabProy').hide();" />
+
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Presupuesto" widgetVar="tabPres" resizable="false" modal="true" closeOnEscape="true" >
+            <h:form id="frmPres" >
+                <p:dataTable id="tblPres" value="#{movimientosMB.listaPres}" var="pres" selection="#{movimientosMB.pb}"
+                             selectionMode="single" rowKey="#{pres.id_presupuesto}" style="width: 460px" >
+
+
+                    <p:column headerText="No. Presupuesto" >
+                        <h:outputText value="#{pres.id_presupuesto}" />
+                    </p:column>
+
+
+                    <p:column headerText="Presupuesto" >
+                        <h:outputText value="#{pres.presupuesto}" />
+                    </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{movimientosMB.seleccionarPresupuesto}" 
+                            update=":frmMovs:pres, :frmEst:tblEstim"
+                            oncomplete="PF('tabPres').hide();" />
+
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+        <p:dialog header="Estimaciones" widgetVar="dialEstim" resizable="false" modal="true" closeOnEscape="true" >
+            <h:form id="frmEst" >
+                <p:dataTable id="tblEstim" value="#{movimientosMB.listConc}" var="estim" rowKey="#{estim.id_estimacion}"
+                             selection="#{movimientosMB.conc}" selectionMode="single" paginator="true" rows="10"
+                             style="width: 460px" >
+                    
+                    <p:column headerText="Estimacion">
+                        <h:outputText value="#{estim.id_estimacion}" />
+                    </p:column>
+                    
+                    <p:column headerText="Fecha">
+                        <h:outputText value="#{estim.fecha}" />
+                    </p:column>
+                    
+                    <p:column headerText="Importe">
+                        <h:outputText value="#{estim.importe}" />
+                    </p:column>
+                    
+                    <p:ajax event="rowSelect" listener="#{movimientosMB.seleccionarEstim}" 
+                            update=":frmMovs:est, :frmMovs:tblFact"
+                            oncomplete="PF('dialEstim').hide();" />
+                    
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+        <p:dialog header="Lista de Movimientos" widgetVar="dialMovs" resizable="false" modal="true" closeOnEscape="true" >
+            <h:form id="frmListMovs" >
+                <p:dataTable id="tblMovs" value="#{movimientosMB.listMovs}" var="mov" rowKey="#{mov.id_movimiento}"
+                             paginator="true" rows="10" >
+                
+                    <p:column headerText="Fecha del movimiento" >
+                        <h:outputText value="#{mov.fechaMov}" />
+                    </p:column>
+                    
+                    <p:column headerText="Importe del movimiento" >
+                        <h:outputText value="#{mov.importe}" />
+                    </p:column>
+                    
+                
+                </p:dataTable>
+                
+                <h:panelGrid id="grdTblMovs" columns="4" >
+                    
+                    <h:outputLabel for="sumMovs" value="Suma de movimientos" />
+                    <h:outputText id="sumMovs" value="#{movimientosMB.sumaMovs}" />
+                    
+                    <h:outputLabel for="restante" value="Resto por aplicar" />
+                    <h:outputText id="restante" value="#{movimientosMB.restoPorPagar}" />
+                    
+                </h:panelGrid>
+                
+            </h:form>
+        </p:dialog>
+        
+    </h:body>
+</html>
+

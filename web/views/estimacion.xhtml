@@ -1,0 +1,345 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Estimaciones</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="cssLayout.css" />
+    </h:head>
+    <h:body>
+        
+        <div class="container">
+            <h:form id="frmEstim" class="form-horizontal" >
+                
+                <p:growl id="msgEstim" showDetail="true" life="5000" />
+                <p:panel header="Generación de estimaciones" >
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="proy" value="Proyecto: " />
+                            <p:inputText id="proy" value="#{estimar.proyecto}" onclick="PF('tabProy').show();"
+                                         styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="pres" value="Presupuesto: " />
+                            <p:inputText id="pres" value="#{estimar.presupuesto}" onclick="PF('dialPres').show();"
+                                         styleClass="form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="cont" value="Contrato: " />
+                            <p:inputText id="cont" value="#{estimar.nroContto}" onclick="PF('dialConts').show();"
+                                         styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="avnce" value="Avance: " />
+                            <p:inputText id="avnce" value="#{estimar.nroAvance}" onclick="PF('dialAvance').show();"
+                                         styleClass="form-control" />
+                        </div>
+                    </div>
+
+                    
+                    
+                    <p:dataTable id="tblInsAvn" value="#{estimar.listInsAv}" var="insAv" rowKey="#{insAv.id_avanceInsCont}"
+                                 emptyMessage="No hay datos para mostrar" >
+                        
+                        <f:facet name="header" >
+                            Detalle del Avance
+                        </f:facet>
+                        
+                        <p:column headerText="ID" >
+                            <h:outputText value="#{insAv.id_avanceInsCont}" />
+                        </p:column>
+
+                        <p:column headerText="Código" >
+                            <h:outputText value="#{insAv.codInsumo}" />
+                        </p:column>
+
+                        <p:column headerText="Descripción" >
+                            <h:outputText value="#{insAv.descripcion}" />
+                        </p:column>
+
+                        <p:column headerText="Unidad" >
+                            <h:outputText value="#{insAv.unidad}" />
+                        </p:column>
+
+                        <p:column headerText="Avance" >
+                            <h:outputText value="#{insAv.avance}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Precio Unitario" >
+                            <h:outputText value="#{insAv.presUnit}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Importe Avance" >
+                            <h:outputText value="#{insAv.importeAvnce}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+
+                    </p:dataTable>
+
+                    <br/>
+
+                    <div class="form-group" >
+                        <div class="col-md-4">
+                            <h:outputText value="Contratatado" style="font-size: larger; font-style: italic"/><br/>
+                            <h:outputText value="(Acumulado)" style="font-size: larger; font-style: italic"/><br/>
+                            <h:outputLabel for="impCntto" value="Estimación Anterior" style="font-weight: bold" />
+                            <p:inputText id="impCntto" value="#{estimar.estimAnt}" readonly="true" styleClass="form-control" />
+                            
+                            <h:outputLabel for="estima" value="Esta estimación" style="font-weight: bold" />
+                            <p:inputText id="estima" value="#{estimar.sumaAvance}" readonly="true" styleClass="form-control" />
+                            
+                            <h:outputLabel for="estAcum" value="Total acumulado" style="font-weight: bold" />
+                            <p:inputText id="estAcum" value="#{estimar.acumImporte}" readonly="true" styleClass="form-control" />
+                            
+                            <h:outputLabel for="estXEjer" value="Por ejercer" style="font-weight: bold" />
+                            <p:inputText id="estXEjer" value="#{estimar.difPago}" readonly="true" styleClass="form-control" />
+                            
+                        </div>
+                        <div class="col-md-4">
+                            <h:outputText value="Anticipo" style="font-size: larger; font-style: italic" /><br/>
+                            <h:outputText value="(Acumulado)" style="font-size: larger; font-style: italic" /><br/>
+                            
+                            <h:outputLabel for="impAntcpo" value="Amortización Anterior" style="font-weight: bold" />
+                            <p:inputText id="impAntcpo" value="#{estimar.amortAnt}" readonly="true" styleClass="form-control" />
+                            
+                            <h:outputLabel for="amortiza" value="Esta amortización" style="font-weight: bold" />
+                            <p:inputText id="amortiza" value="#{estimar.amortAntcpoImp}" readonly="true" styleClass="form-control" />
+                            
+                            <h:outputLabel for="amortAcum" value="Total amortizado" style="font-weight: bold" />
+                            <p:inputText id="amortAcum" value="#{estimar.acumAmort}" readonly="true" styleClass="form-control" />
+                            
+                            <h:outputLabel for="amortXEjer" value="Por amortizar" style="font-weight: bold" />
+                            <p:inputText id="amortXEjer" value="#{estimar.difAmortizar}" readonly="true" styleClass="form-control" />
+                            
+                        </div>
+                        <div class="col-md-4">
+                            <h:outputText value="Garantía" style="font-size: larger; font-style: italic" /><br/>
+                            <h:outputText value="(Acumulado)" style="font-size: larger; font-style: italic" /><br/>
+                           
+                            <h:outputLabel for="impGtia" value="Garantía retenida" style="font-weight: bold" />
+                            <p:inputText id="impGtia" value="#{estimar.gtiaAntRet}" readonly="true" 
+                                         styleClass="form-control"  />
+                            
+                            <h:outputLabel for="gtiaRet" value="Esta retención" style="font-weight: bold" />
+                            <p:inputText id="gtiaRet" value="#{estimar.rtnGtia}" readonly="true" 
+                                         styleClass="form-control" />
+                           
+                            <h:outputLabel for="gtiaAcum" value="Total retenido" style="font-weight: bold" />
+                            <p:inputText id="gtiaAcum" value="#{estimar.acumGtia}" readonly="true" 
+                                         styleClass="form-control" />
+                            
+                            <h:outputLabel for="gtiaXEjer" value="Por retener" style="font-weight: bold" />
+                            <p:inputText id="gtiaXEjer" value="#{estimar.difGarantia}" readonly="true" 
+                                         styleClass="form-control" />
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputText value="Automático" style="font-size: larger; font-style: italic" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group form-inline" >
+                        <div class="col-md-2">
+                            <h:outputLabel for="setPctAmort" value="Porcentaje" />
+                        </div>
+                        <div class="col-md-4">
+                            <p:inputText id="setPctAmort" value="#{estimar.pctAmort}"
+                                        style="width: 50px; margin-right: 10px" styleClass="form-control" />
+                            <p:inputText id="setImpAmort" value="#{estimar.amortAntcpoImp}" 
+                                        styleClass="form-control" />
+                        </div>
+                        <div class="col-md-2">
+                            
+                        </div>
+                    </div>
+                        
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputText value="Retenciones de Ley" style="font-size: larger; font-style: italic" />
+                        </div>
+                    </div>         
+                    
+                    <div class="form-group form-inline" >
+                        <div class="col-md-2">
+                            <h:outputLabel for="rtnFlete" value="Retención por Flete" />
+                        </div>
+                        <div class="col-md-4">
+                            <p:inputText id="rtnFlete" value="#{estimar.rtnFlete}" readonly="true" style="margin-left: 20px" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group form-inline" >
+                        <div class="col-md-2">
+                            <h:outputLabel for="rtnRenta" value="Retención por Rentas" />
+                        </div>
+                        <div class="col-md-4">
+                            <p:inputText id="rtnRenta" value="#{estimar.rtnRenta}" readonly="true" style="margin-left: 20px" />
+                        </div>
+                    </div>
+                        
+                        
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputText value="Retención de Garantía" style="font-size: larger; font-style: italic" />
+                        </div>        
+                    </div>
+                    
+                    <div class="form-group form-inline" >
+                        <div class="col-md-2">
+                            <h:outputLabel for="rtnGtia" value="Retención Fondo de Garantía" />
+                        </div>
+                        <div class="col-md-4">
+                            <p:inputText id="rtnGtia" value="#{estimar.rtnGtia}" readonly="true" style="margin-left: 20px" />
+                        </div>
+                    </div>
+
+                    
+
+
+                    
+
+                    <br/><br/>
+                    <p:commandButton id="btnEstimar" value="Autorizar" actionListener="#{estimar.comprobarAmortizacion()}" 
+                                     disabled="#{estimar.actAutoriza}" update="frmEstim" />
+                    <p:commandButton id="btnLimpiar" value="Limpiar Formulario" actionListener="#{estimar.refresh()}"
+                                     update="frmEstim"/>
+                    <p:commandButton id="rechAvance" value="Rechazar Avance" actionListener="#{estimar.rechazarAvance()}" 
+                                     disabled="#{estimar.actAutoriza}" />
+
+                </p:panel>
+            </h:form>
+        </div>
+            
+            
+            
+        
+        
+        <!--        Tabla de proyecto-->
+        <p:dialog widgetVar="tabProy" resizable="false" header="Proyectos" modal="true" closeOnEscape="true" >
+            
+            <h:form id="tabProyects" >
+                
+                <p:dataTable id="tbProy" value="#{estimar.listaProy}" var="cont" rowKey="#{cont.id_proyecto}"
+                             selection="#{estimar.ps}" selectionMode="single" paginator="true" rows="15" >
+                
+                    
+                    <p:column headerText="No. Proyecto" >
+                        <h:outputText value="#{cont.id_proyecto}" />
+                    </p:column>
+                    
+                    <p:column headerText="Proyecto" >
+                        <h:outputText value="#{cont.proyecto}" />
+                    </p:column>
+                    
+                    <p:ajax event="rowSelect" listener="#{estimar.obtenerProyecto}" 
+                            update=":frmEstim:proy, :presForm:tblPres" oncomplete="PF('tabProy').hide();" />
+                
+                </p:dataTable>
+                
+            </h:form>
+            
+        </p:dialog>
+        
+        <!--        Tabla presupuesto-->
+        <p:dialog header="Presupuesto" widgetVar="dialPres" resizable="false" modal="true" width="400px" closeOnEscape="true" >
+            <h:form id="presForm" >
+                <p:dataTable id="tblPres" value="#{estimar.listaPres}" var="pres" rowKey="#{pres.id_presupuesto}" 
+                             selection="#{estimar.presB}" selectionMode="single" 
+                             paginator="true" rows="10" >
+
+                    <p:column headerText="No. Presupuesto"  >
+                        <h:outputText value="#{pres.id_presupuesto}" />
+                    </p:column>
+
+                    <p:column headerText="Presupuesto"  >
+                        <h:outputText value="#{pres.presupuesto}" />
+                    </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{estimar.obtenerPresupuesto}" 
+                            update=":frmEstim:pres, :tbConttrats:tbContts" oncomplete="PF('dialPres').hide();" />  
+
+                </p:dataTable>
+                
+                
+                
+            </h:form>
+        </p:dialog>
+        
+        <!--    Tabla contratos-->
+        <p:dialog widgetVar="dialConts" header="Pre Contratos" resizable="false" closeOnEscape="true" modal="true" >
+            <h:form id="tbConttrats" >
+                <p:dataTable id="tbContts" value="#{estimar.listPre}" var="cont" rowKey="#{cont.id_contrato}"
+                             selectionMode="single" selection="#{estimar.c}" paginator="true" rows="10" >
+
+                    <p:column headerText="Contrato No.">
+                        <h:outputText value="#{cont.numContrato}" />
+                    </p:column>
+
+                    <p:column>
+                        <h:outputText value="#{cont.tipo}" />
+                    </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{estimar.seleccionarContrat}" 
+                            update=":frmAvan:tblAvance, :frmEstim:cont" 
+                            oncomplete="PF('dialConts').hide();" />
+
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+        <!--    Tabla avances-->
+        <p:dialog widgetVar="dialAvance" header="Avances" resizable="false" modal="true" closeOnEscape="true">
+            <h:form id="frmAvan" >
+                <p:dataTable id="tblAvance" value="#{estimar.listAv}" var="avn" selectionMode="single" selection="#{estimar.ab}"
+                             rowKey="#{avn.id_avance}" >
+
+                    <p:column headerText="Consecutivo" >
+                        <h:outputText value="#{avn.nroAvance}" />
+                    </p:column>
+
+                    <p:column headerText="Fecha" >
+                        <h:outputText value="#{avn.fecha}" />
+                    </p:column>
+
+                    <p:column headerText="Importe" >
+                        <h:outputText value="#{avn.importeEstimacion}" />
+                    </p:column>
+                    
+                    <p:column headerText="Estatus" >
+                        <h:outputText value="#{avn.estatusAvance}" />
+                    </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{estimar.seleccionarAvance}" oncomplete="PF('dialAvance').hide();"
+                            update=":frmEstim:avnce, :frmEstim:tblInsAvn, 
+                            :frmEstim:impCntto, :frmEstim:estima, :frmEstim:estAcum, :frmEstim:estXEjer, 
+                            :frmEstim:impAntcpo, :frmEstim:amortiza, :frmEstim:amortAcum, :frmEstim:amortXEjer,
+                            :frmEstim:impGtia, :frmEstim:gtiaRet, :frmEstim:gtiaAcum, :frmEstim:gtiaXEjer, 
+                            :frmEstim, :frmEstim, :frmEstim:btnEstimar
+                            :frmEstim:rechAvance" />
+
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+        <h:outputScript library="js" name="bootstrap.js" />
+    </h:body>
+</html>
+

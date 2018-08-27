@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <h:head>
+        <title>Edicion de Proveedor</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            
+             <h:inputHidden value="#{formProveedorMB.idProveedor}" />
+             <p:panel id="pn1" header="Datos del Proveedor" style="margin-bottom:20px">
+                 <h:panelGrid columns="1" cellpadding="10">
+                     <h:outputLabel for="noProveedor" value="No Proveedor: #{formProveedorMB.idProveedor}"  /> 
+                 </h:panelGrid>
+                 
+                 <h:panelGrid columns="2" cellpadding="10">
+                     
+                     <h:outputLabel for="razonsocial" value="Razon Social: *" /> 
+                     <p:inputText id="razonsocial" value="#{formProveedorMB.razonSocial}" size="100" required="true" label="razonsocial" />  
+                       
+                     <h:outputLabel for="dirFiscal" value="Dirección Fiscal: *" /> 
+                     <p:inputText id="dirFiscal" size="100" value="#{formProveedorMB.dirFiscal}" required="true" label="dirFiscal" />  
+
+                 </h:panelGrid>
+             </p:panel>
+            <p:panel id="pn2" header="Datos Bancarios" style="margin-bottom:20px">
+                 <h:panelGrid columns="4" cellpadding="10">
+                     <h:outputLabel for="rfc" value="R.F.C.: *" /> 
+                     <p:inputText id="rfc" size="30" value="#{formProveedorMB.rfc}" required="true" label="rfc" />  
+
+                     <h:outputLabel for="telefono" value="Teléfono: *" /> 
+                     <p:inputText id="telefono" size="30" value="#{formProveedorMB.telefono}" required="true" label="telefono" />  
+
+                     <h:outputLabel for="contacto" value="Nombre de Contacto: *" /> 
+                     <p:inputText id="contacto" size="30" value="#{formProveedorMB.nombreContacto}" required="true" label="contacto" />  
+
+                     <h:outputLabel for="correo" value="Correo Electrónico: *" /> 
+                     <p:inputText id="correo" size="30" value="#{formProveedorMB.email}" required="true" label="correo" />  
+
+
+                 </h:panelGrid>
+                 
+                 
+                 <h:panelGrid columns="2" cellpadding="10">
+                     <h:outputLabel for="nomBanco" value="Nombre del banco: *" /> 
+                     <p:inputText id="nomBanco" size="50" value="#{formProveedorMB.nombreBanco}" required="true" label="nomBanco" />  
+                       
+                     <h:outputLabel for="plaza" value="Número y Nombre Plaza: " /> 
+                     <p:inputText id="plaza" size="50" value="#{formProveedorMB.numNomPlaza}"  label="plaza" /> 
+                     
+                     <h:outputLabel for="cuenta" value="No. Cuenta: *" /> 
+                     <p:inputText id="cuenta" size="50" value="#{formProveedorMB.noCuenta}" required="true" label="cuenta" />
+                     
+                     <h:outputLabel for="interbancaria" value="No Cuenta SPEUA y/o Interbancaria: *" /> 
+                     <p:inputText id="interbancaria" size="50" value="#{formProveedorMB.noCuentaInterbancaria}" required="true" label="interbancaria" />
+                     
+                     <h:outputLabel for="sucursal" value="No. y Nombre Sucursal: (11 dígitos)*" /> 
+                     <p:inputText id="sucursal" size="50" value="#{formProveedorMB.numNomSucursal}" required="true" label="sucursal" />
+
+                     <h:outputLabel for="clabe" value="C.L.A.B.E.: (18 dígitos)*" /> 
+                     <p:inputText id="clabe" size="50" value="#{formProveedorMB.clabe}" required="true" label="clabe" />
+                     
+                     <h:outputLabel for="ciudad" value="Ciudad: *" /> 
+                     <p:inputText id="ciudad" size="50" value="#{formProveedorMB.ciudad}" required="true" label="ciudad" />
+                     
+                     <h:outputLabel for="aba" value="No. de ABA: (9 dígitos)" /> 
+                     <p:inputText id="aba" size="50" value="#{formProveedorMB.noAba}"  label="aba" />
+                     
+                     <p:commandButton id="btnNuevoProveedor" update=":form:growl" ajax="false" value="Guardar Datos" actionListener="#{proveedoresMB.actualizar()}"/>
+                     
+                 </h:panelGrid>
+                 
+             </p:panel> 
+        </h:form>
+    </h:body>
+</html>
+

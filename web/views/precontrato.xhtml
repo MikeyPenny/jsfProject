@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Pre Contrato</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="cssLayout.css" />
+    </h:head>
+    <h:body>
+        <div class="container" >
+            <p:panel header="Crear Pre Contrato">
+
+
+                <!--            Formulario de busqueda-->
+                <h:form id="contratForm" class="form-horizontal" >
+
+                    <p:growl id="msjRegistro" showDetail="true" life="5000" />
+                    <!--<p:messages id="msgError" showDetail="true" autoUpdate="true" closable="true" />-->
+                    
+                    <div class="form-group" >
+                        <h:outputLabel styleClass="sr-only" for="proy" value="Proyecto: " />
+                        <p:inputText id="proy" value="#{precontrato.proyecto}" onclick="PF('tabProy').show();"
+                                     styleClass="form-control" placeholder="Proyecto:" />
+                    </div>
+                    
+                    <div class="form-group" >
+                        <h:outputLabel for="pres" value="Presupuesto: " styleClass="sr-only" />
+                        <p:inputText id="pres" value="#{precontrato.presupuesto}" onclick="PF('dialPres').show();"
+                                     styleClass="form-control" placeholder="Presupuesto:" />
+                    </div>
+                    
+                    <div class="form-group" >
+                        <h:outputLabel for="tipoContto" value="Tipo Pre Contrato: " /><br/>
+                        <p:selectOneMenu id="tipoContto" value="#{precontrato.tipoContto}" 
+                                         disabled="#{precontrato.tipo}" >
+                            <f:selectItem itemLabel="Seleccionar Tipo" itemValue="" />
+                            <f:selectItems value="#{precontrato.listaSubcs}" var="sub" itemLabel="#{sub.definicion}"
+                                           itemValue="#{sub.clave}" >
+
+                            </f:selectItems>
+
+                        </p:selectOneMenu>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <p:commandButton value="Agregar Concepto" actionListener="#{precontrato.listarSubcontratos}" 
+                                         oncomplete="PF('insumos').show();"  update=":insForm:tblInsumos" />
+
+                        <p:commandButton value="Limpiar" actionListener="#{precontrato.limpiarFormulario}" 
+                                         update="contratForm" />
+                    </div>
+
+                    
+                    <p:dataTable id="tblContrats" var="pre" value="#{precontrato.listaContrat}" editable="true" 
+                                 rowKey="#{pre.codInsumo}" editMode="cell" >
+
+                        <p:column headerText="Código Insumo" >
+                            <h:outputText value="#{pre.codInsumo}" />
+                        </p:column>
+
+                        <p:column headerText="Descripción" >
+                            <h:outputText value="#{pre.descripcion}" />
+                        </p:column>
+
+                        <p:column headerText="Unidad" >
+                            <h:outputText value="#{pre.unidad}" />
+                        </p:column>
+
+                        <p:column headerText="Cantidad disponible" >
+                            <h:outputText value="#{pre.cantCtrl}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Cantidad" >
+                            <p:cellEditor>
+                                <f:facet name="output"><p:inputText value="#{pre.cantContrato}" 
+                                                                    style="width: 140px; text-align: right" /></f:facet>
+                                <f:facet name="input"><p:inputText id="cant" value="#{pre.cantContrato}" 
+                                                                   style="width: 140px; text-align: right" /></f:facet>
+                            </p:cellEditor> 
+                        </p:column>
+
+
+
+                        <p:column headerText="Eliminar">
+                            <p:commandButton value="Eliminar" oncomplete="onRowDelete()" >
+                                <f:setPropertyActionListener value="#{pre}" target="#{precontrato.insumoSel}" />
+                            </p:commandButton>
+                        </p:column>
+
+                        
+
+                        <p:ajax event="cellEdit" listener="#{precontrato.validarCantidad}" oncomplete="onCellEdit()" />
+
+                    </p:dataTable>
+                    <p:remoteCommand name="onCellEdit" actionListener="#{precontrato.editarImporte}" 
+                                     update=":contratForm:tblContrats, btnGuardar" />
+
+                    <p:remoteCommand name="onRowDelete" actionListener="#{precontrato.eliminarInsumo}" 
+                                     update=":contratForm:tblContrats" />
+
+                    <br/>
+
+                    <p:commandButton id="btnGuardar" value="Registrar" actionListener="#{precontrato.guardarPreContrato}"  
+                                     disabled="#{!precontrato.activo}" update="msjRegistro, contratForm"  />
+
+
+
+
+                </h:form>
+            </p:panel>
+
+    <!--        Tabla de proyecto-->
+            <p:dialog widgetVar="tabProy" resizable="false" header="Proyectos" modal="true" closeOnEscape="true" >
+
+                <h:form id="tabProyects" >
+
+                    <p:dataTable id="tbProy" value="#{precontrato.listProy}" var="cont" rowKey="#{cont.id_proyecto}"
+                                 selection="#{precontrato.ps}" selectionMode="single" paginator="true" rows="15"
+                                 style="width: 460px">
+
+
+                        <p:column headerText="No. Proyecto" >
+                            <h:outputText value="#{cont.id_proyecto}" />
+                        </p:column>
+
+                        <p:column headerText="Proyecto" >
+                            <h:outputText value="#{cont.proyecto}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{precontrato.obtenerProyecto}" 
+                                update=":contratForm:proy, :presForm:tblPres" oncomplete="PF('tabProy').hide();" />
+
+                    </p:dataTable>
+
+                </h:form>
+
+            </p:dialog>
+
+    <!--        Tabla presupuesto-->
+            <p:dialog header="Presupuesto" widgetVar="dialPres" resizable="false" modal="true" width="400px" closeOnEscape="true" >
+                <h:form id="presForm" >
+                    <p:dataTable id="tblPres" value="#{precontrato.listaPres}" var="pres" rowKey="#{pres.id_presupuesto}" 
+                                 selection="#{precontrato.presB}" selectionMode="single" 
+                                 paginator="true" rows="15" >
+
+                        <p:column headerText="No. Presupuesto"  >
+                            <h:outputText value="#{pres.id_presupuesto}" />
+                        </p:column>
+
+                        <p:column headerText="Presupuesto"  >
+                            <h:outputText value="#{pres.presupuesto}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{precontrato.obtenerPresupuesto}" 
+                                update=":contratForm:pres" oncomplete="PF('dialPres').hide();" />  
+
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+
+    <!--        Tabla Insumos-->
+            <p:dialog widgetVar="insumos" closeOnEscape="true" resizable="false" closable="true" header="Insumos Subcontrato"
+                      modal="true">
+
+                <h:form id="insForm" >
+                    <p:dataTable id="tblInsumos" value="#{precontrato.listaSubc}" var="ins" rowKey="#{ins.id_insumo}" 
+                                 selection="#{precontrato.listaContrat}" paginator="true" rows="10" scrollable="true"
+                                 style="width: 900px; height: 500px" >
+
+                        <p:column selectionMode="multiple" style="text-align: center" />
+
+                        <p:column headerText="Codigo Insumo" >
+                            <h:outputText value="#{ins.codInsumo}" />
+                        </p:column>
+
+                        <p:column headerText="Descripción" >
+                            <h:outputText value="#{ins.descripcion}" />
+                        </p:column>
+
+                        <p:column headerText="Unidad" >
+                            <h:outputText value="#{ins.unidad}" />
+                        </p:column>
+
+                        <p:column headerText="Cantidad x Contratar" >
+                            <h:outputText value="#{ins.cantCtrl}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Seleccionar" actionListener="#{precontrato.desactivarMenu}" 
+                                             oncomplete="PF('insumos').hide();" 
+                                             update=":contratForm:tblContrats, :contratForm:tipoContto" />
+                        </f:facet>
+
+                    </p:dataTable>
+                </h:form>
+
+            </p:dialog>
+        </div>
+            
+
+
+        <h:outputScript library="js" name="bootstrap.js" />
+    </h:body>
+</html>
+

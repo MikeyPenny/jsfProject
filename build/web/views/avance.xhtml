@@ -1,0 +1,307 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Avance</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="cssLayout.css" />
+    </h:head>
+    <h:body>
+        
+        <div class="container">
+            
+            
+
+            <h:form id="frmAvance" class="form-horizontal" >
+                <p:growl id="msgAvance" showDetail="true" life="5000" />
+                <p:panel header="Avance por Contrato">
+                
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="selProy" value="Proyecto" />
+                            <p:inputText id="selProy" value="#{avance.proyecto}" onclick="PF('tabProy').show();"
+                                         styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="selPres" value="Presupuesto" />
+                            <p:inputText id="selPres" value="#{avance.presupto}" onclick="PF('tabPres').show();"
+                                         styleClass="form-control" />
+                        </div>   
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="numContto" value="Num. Contrato" />
+                            <p:inputText id="numContto" value="#{avance.numContrato}" onclick="PF('dialConts').show();" 
+                                         readonly="true" styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="contto" value="Contrato" />
+                            <p:inputText id="contto" value="#{avance.tipoContrat}" 
+                                         style="font-size: small" readonly="true" styleClass="form-control" />
+                        </div>   
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="cntrtista" value="Contratista"  />
+                            <p:inputText id="cntrtista" value="#{avance.contratista}" 
+                                         style="font-size: small" readonly="true" styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="impContto" value="Importe" />
+                            <p:inputText id="impContto" value="#{avance.importeContrato}" readonly="true" 
+                                         style="text-align: right" styleClass="form-control" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </div>   
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="acumul" value="Importe Acumulado" />
+                            <p:inputText id="acumul" value="#{avance.acumEstimado}" readonly="true" style="text-align: right" 
+                                         styleClass="form-control" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="resta" value="Por Estimar" />
+                            <p:inputText id="resta" value="#{avance.porEstimar}" readonly="true" style="text-align: right"
+                                         styleClass="form-control" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </div>   
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="date" value="Fecha" />
+                            <p:inputText id="date" value="#{avance.dateNow}" readonly="true" styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="avnNro" value="Nro. de Avance Generado" />
+                            <p:inputText id="avnNro" value="#{avance.nroAvance}" readonly="true" styleClass="form-control" />
+                        </div>   
+                    </div>
+                    
+                    
+                    <p:dataTable id="tblAvance" value="#{avance.listSelec}" var="avnce" rowKey="#{avnce.id_insumo}"
+                                 editable="true" editMode="cell" emptyMessage="No hay datos" >
+                        
+                        <f:facet name="header" >
+                            Tabla de Estimación
+                        </f:facet>
+                        
+                        <p:column headerText="Código" >
+                            <h:outputText value="#{avnce.codInsumo}" />
+                        </p:column>
+
+                        <p:column headerText="Descripción" >
+                            <h:outputText value="#{avnce.descripcion}" />
+                        </p:column>
+
+                        <p:column headerText="Unidad" >
+                            <h:outputText value="#{avnce.unidad}" />
+                        </p:column>
+
+                        <p:column headerText="Cantidad contrato" >
+                            <h:outputText value="#{avnce.cantContrato}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Cantidad por estimar" >
+                            <h:outputText value="#{avnce.cantCtrl}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Cantidad Avance" >
+                            <p:cellEditor>
+                                <f:facet name="output" >
+                                    <p:inputText value="#{avnce.avance}" style="text-align: right; width: 95%" >
+                                        <f:convertNumber pattern="###,###,###,###.00" />
+                                    </p:inputText>
+                                </f:facet>
+                                <f:facet name="input" >
+                                    <p:inputText id="editAvnce" value="#{avnce.avance}" style="text-align: right; width: 95%" >
+                                        <f:convertNumber pattern="###,###,###,###.00" />
+                                    </p:inputText>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="Precio Unitario" >
+                            <h:outputText value="#{avnce.presUnit}" >
+                                <f:convertNumber type="currency" currencySymbol="$" />
+                            </h:outputText>
+                        </p:column>
+
+
+
+                        <p:column headerText="Importe" >
+                            <h:outputText value="#{avnce.presUnit.multiply(avnce.avance)}" >
+                                <f:convertNumber type="currency" currencySymbol="$" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:ajax event="cellEdit" listener="#{avance.validarAvance}" oncomplete="onProgress()" 
+                                update=":frmAvance:sumaAdv, frmAvance:msgAvance"/>
+
+                    </p:dataTable>
+
+                    <p:remoteCommand name="onProgress" update="tblAvance, btnAutorizar" />
+                    <br/>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="sumaAdv" value="Total Avance" />
+                            <p:inputText id="sumaAdv" value="#{avance.sumaAvance}" style="text-align: right"
+                                         styleClass="form-control" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </div>        
+                    </div>
+                    
+                    
+
+                    <p:commandButton id="btnAutorizar" actionListener="#{avance.registrarAvance}" value="Autorizar" 
+                                     update=":frmAvance:avnNro, msgAvance, frmAvance" disabled="#{avance.actRegistro}" />
+
+                    <p:commandButton id="btnLimpiar" value="Limpiar" 
+                                     actionListener="#{avance.limpiarFormulario}" 
+                                     update=":frmAvance" />
+                </p:panel>
+            </h:form>
+
+            
+
+                <!--        Pantalla proyecto-->
+            <p:dialog widgetVar="tabProy" resizable="false" header="Proyectos" modal="true" closeOnEscape="true" >
+                <h:form id="frmProy">
+                    <p:dataTable id="tblProy" value="#{avance.listProy}" var="proy" selection="#{avance.ps}"
+                                 selectionMode="single" rowKey="#{proy.id_proyecto}" style="width: 460px" >
+
+                        <p:column headerText="No.Proyecto" >
+                            <h:outputText value="#{proy.id_proyecto}" />
+                        </p:column>
+
+                        <p:column headerText="Proyecto" >
+                            <h:outputText value="#{proy.proyecto}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{avance.seleccionarProyect}" 
+                                update=":frmAvance:selProy, :frmPres:tblPres" oncomplete="PF('tabProy').hide();" />
+
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+
+                <!--Pantalla presupuestos-->
+            <p:dialog header="Presupuesto" widgetVar="tabPres" resizable="false" modal="true" closeOnEscape="true" >
+                <h:form id="frmPres" >
+                    <p:dataTable id="tblPres" value="#{avance.listaPres}" var="pres" selection="#{avance.pb}"
+                                 selectionMode="single" rowKey="#{pres.id_presupuesto}" style="width: 460px" >
+
+
+                        <p:column headerText="No. Presupuesto" >
+                            <h:outputText value="#{pres.id_presupuesto}" />
+                        </p:column>
+
+
+                        <p:column headerText="Presupuesto" >
+                            <h:outputText value="#{pres.presupuesto}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{avance.seleccionarPresupuesto}" 
+                                update=":frmAvance:selPres, :tbPreConttrats:tbContts"
+                                oncomplete="PF('tabPres').hide();" />
+
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+
+        <!--        Pantalla Contratos-->
+            <p:dialog widgetVar="dialConts" header="Pre Contratos" resizable="false" closeOnEscape="true" modal="true" >
+                <h:form id="tbPreConttrats" >
+                    <p:dataTable id="tbContts" value="#{avance.listPre}" var="cont" rowKey="#{cont.id_contrato}"
+                                 selectionMode="single" selection="#{avance.c}" paginator="true" rows="10" style="width: 460px" >
+
+                        <p:column headerText="Contrato No.">
+                            <h:outputText value="#{cont.numContrato}" />
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="#{cont.tipo}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{avance.seleccionarContrat}" 
+                                update=":frmAvance:contto, :frmAvance:impContto, :frmAvance:numContto, 
+                                :frmAvance:cntrtista, :frmIns:tblConcpts, :frmAvance:acumul, :frmAvance:resta, 
+                                :frmAvance:btnAutorizar" 
+                                oncomplete="PF('dialConts').hide(); PF('dialInsumo').show();" />
+
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+
+        <!--        Tabla Insumos-->
+            <p:dialog widgetVar="dialInsumo" resizable="false" closeOnEscape="true" header="Conceptos Contratados"  >
+                <h:form id="frmIns" >
+
+                    <p:dataTable id="tblConcpts" value="#{avance.listInsum}" var="insum" rowKey="#{insum.id_insumo}" 
+                                 selection="#{avance.listSelec}" style="width: 800px" paginator="true" rows="5" >
+
+                        <p:column selectionMode="multiple" style="text-align: center" />
+
+                        <p:column headerText="Consecutivo" >
+                            <h:outputText value="#{insum.id_insumo}" />
+                        </p:column>
+
+                        <p:column headerText="Código Insumo" >
+                            <h:outputText value="#{insum.codInsumo}" />
+                        </p:column>
+
+                        <p:column headerText="Descripción" >
+                            <h:outputText value="#{insum.descripcion}" />
+                        </p:column>
+
+                        <p:column headerText="Precio Unitario" >
+                            <h:outputText id="precioInp" value="#{insum.presUnit}" >
+                                <f:convertNumber type="currency" currencySymbol="$" />
+                            </h:outputText>             
+                        </p:column>
+
+                        <p:column headerText="Cantidad" >
+                            <h:outputText value="#{insum.cantContrato}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Importe" >
+                            <h:outputText value="#{insum.importeCont}" >
+                                <f:convertNumber type="currency" currencySymbol="$" />
+                            </h:outputText>
+                        </p:column>
+
+                        <f:facet name="footer" >
+                            <p:commandButton value="Seleccionar" oncomplete="PF('dialInsumo').hide();" 
+                                             update=":frmAvance:tblAvance" />
+                        </f:facet>
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+        </div>
+        
+                
+        <h:outputScript library="js" name="bootstrap.js" />
+    </h:body>
+</html>
+

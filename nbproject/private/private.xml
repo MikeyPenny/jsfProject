@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="19">
+        <file>
+            <url>src/java/com/mbean/AvanceMBean.java</url>
+            <bookmark id="11">
+                <name/>
+                <line>175</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/mbean/ContratoMBean.java</url>
+            <bookmark id="10">
+                <name/>
+                <line>200</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/views/altaProyecto.xhtml</url>
+            <bookmark id="6">
+                <name/>
+                <line>63</line>
+                <key/>
+            </bookmark>
+            <bookmark id="3">
+                <name/>
+                <line>198</line>
+                <key/>
+            </bookmark>
+            <bookmark id="4">
+                <name/>
+                <line>226</line>
+                <key/>
+            </bookmark>
+            <bookmark id="7">
+                <name/>
+                <line>262</line>
+                <key/>
+            </bookmark>
+            <bookmark id="8">
+                <name/>
+                <line>289</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/mbean/CrearConcepto.java</url>
+            <bookmark id="9">
+                <name/>
+                <line>818</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/views/estimacion.xhtml</url>
+            <bookmark id="15">
+                <name/>
+                <line>330</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/dao/ContratistaDAO.java</url>
+            <bookmark id="13">
+                <name/>
+                <line>540</line>
+                <key/>
+            </bookmark>
+            <bookmark id="14">
+                <name/>
+                <line>863</line>
+                <key/>
+            </bookmark>
+            <bookmark id="17">
+                <name/>
+                <line>888</line>
+                <key/>
+            </bookmark>
+            <bookmark id="18">
+                <name/>
+                <line>1588</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/views/editaConcepto.xhtml</url>
+            <bookmark id="19">
+                <name/>
+                <line>405</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/C:/Users/Mickey/Documents/NetBeansProjects/ERPLook/web/views/listaProyectos.xhtml</file>
+        <file>file:/C:/Users/Mickey/Documents/NetBeansProjects/ERPLook/web/views/cargaPres.xhtml</file>
+        <file>file:/C:/Users/Mickey/Documents/NetBeansProjects/ERPLook/src/java/com/mbean/CargarMB.java</file>
+        <file>file:/C:/Users/Mickey/Documents/NetBeansProjects/ERPLook/src/java/com/bo/CargarProformaBO.java</file>
+    </open-files>
+</project-private>

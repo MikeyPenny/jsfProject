@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Reporte de Pagos</title>
+    </h:head>
+    <h:body>
+        <p:panel>
+            <f:facet name="header" >
+                Cuentas por pagar
+            </f:facet>
+            
+            <h:form id="frmRemesa" >
+                <p:messages id="msgRem" autoUpdate="true" closable="true" showDetail="true" />
+                <h:panelGrid id="grdRemesa" columns="2" >
+                    
+                    <h:outputLabel for="proy" value="Proyecto" />
+                    <p:inputText id="proy" value="#{remesas.proyecto}" placeholder="Seleccione un proyecto" style="margin-left: 80px" 
+                                 onclick="PF('tabProy').show();" />
+                    
+                </h:panelGrid>
+                <br/><br/>
+                <h:panelGrid id="grdFiltros" columns="6" >
+                    
+                    <h:outputLabel for="benef" value="Beneficiario" />
+                    <p:inputText id="benef" value="#{remesas.beneficiario}" />
+                    
+                    <h:outputLabel for="fechDe" value="Fecha de Alta De:" />
+                    <p:inputText id="fechDe" value="#{remesas.fechaDe}" />
+                    
+                    <h:outputLabel for="fechaA" value="A:" />
+                    <p:inputText id="fechaA" value="#{remesas.fechaA}" />
+                    
+                    <h:outputLabel for="cCosto" value="Centro de Costo:" />
+                    <p:inputText id="cCosto" value="#{remesas.centroCosto}" />
+                    
+                    <h:outputLabel for="factProv" value="Factura Proveedor:" />
+                    <p:inputText id="factProv" value="#{remesas.facturaSol}" />
+                    
+                    <h:outputLabel for="estatus" value="Estatus solicitud:" />
+                    <p:inputText id="estatus" value="#{remesas.estatusFactura}" />
+                    
+                    <h:outputLabel for="cuenta" value="Cuenta:" />
+                    <p:inputText id="cuenta" value="#{remesas.cuenta}" />
+                    
+                    <h:outputLabel for="idSol" value="Id Solicitud Pago:" />
+                    <p:inputText id="idSol" value="#{remesas.id_solicitud}" />
+                    
+                </h:panelGrid>
+                <br/><br/>
+                <p:commandButton id="btnBuscar" value="Buscar Solicitud" actionListener="#{remesas.crearQuery}" 
+                                 update=":frmRemesa:tblRemesa" />
+                <br/><br/>
+                <p:dataTable id="tblRemesa" var="rem" value="#{remesas.facturas}" rowKey="#{rem.id_factura}"
+                             emptyMessage="No se encontraron registros" selection="#{remesas.facturasFiltro}" editMode="cell"
+                             editable="true" style="width: 2500px" scrollable="true" scrollWidth="90%" >
+                    
+                    <p:column selectionMode="multiple" style="width: 40px; text-align: center"  />
+                    
+                    <p:column headerText="Id Solicitud" filterBy="#{rem.id_solicitud}" filterMatchMode="contains" >
+                        <h:outputText value="#{rem.id_solicitud}" />
+                    </p:column>
+                    
+                    <p:column headerText="Fecha" filterBy="#{rem.fechaFactura}" filterMatchMode="contains" >
+                        <h:outputText value="#{rem.fechaFactura}" />
+                    </p:column>
+                    
+                    <p:column headerText="Beneficiario" filterBy="#{rem.contratista}" filterMatchMode="contains" >
+                        <h:outputText value="#{rem.contratista}" />
+                    </p:column>
+                    
+                    <p:column headerText="Cuenta" filterBy="#{rem.tipoFactura}" filterMatchMode="contains" >
+                        <h:outputText value="#{rem.tipoFactura}" />
+                    </p:column>
+                    
+                    <p:column headerText="No. Factura" filterBy="#{rem.noFactura}" filterMatchMode="contains" >
+                        <h:outputText value="#{rem.noFactura}" />
+                    </p:column>
+                    
+                    <p:column headerText="Importe Solicitado" >
+                        <h:outputText value="#{rem.importeTotal}" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Pagado" >
+                        <h:outputText value="#{rem.sumaMovs}" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Pasivo" >
+                        <h:outputText value="#{rem.pasivo}" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    
+                    
+                    <p:column headerText="Estatus" filterBy="#{rem.estatusFact}" filterMatchMode="contains" >
+                        <h:outputText value="#{rem.estatusFact}" />
+                    </p:column>
+                    
+                    <p:column headerText="Detalles" >
+                        <p:commandButton id="btnDetalle" value="Ver Detalles" oncomplete="onDetail()" >
+                            <f:setPropertyActionListener value="#{rem}" target="#{remesas.factura}" />
+                        </p:commandButton>
+                    </p:column>
+                    
+                    <p:column headerText="Agregar Movimiento" >
+                        <p:commandButton id="btnAgregarMov" value="Agregar" oncomplete="addTrans()" >
+                            <f:setPropertyActionListener value="#{rem}" target="#{remesas.factura}" />
+                        </p:commandButton>
+                    </p:column>
+                    
+                    <p:ajax event="cellEdit" listener="#{remesas.validarCantidad}" />
+                    
+                    <f:facet name="footer" >
+                        <p:commandButton id="btnValidar" value="Validar" actionListener="#{remesas.validarSolicitud}" 
+                                         update="tblRemesa" />
+                        <p:commandButton id="btnRechazar" value="Rechazar" />
+                        <p:commandButton id="btnRegistrar" value="Registrar Movimiento" 
+                                         actionListener="#{remesas.registrarMovimiento}" update=":frmRemesa:tblRemesa" />
+                    </f:facet>
+                    
+                </p:dataTable>
+                <p:remoteCommand name="onDetail" actionListener="#{remesas.mostrarDetalle}" update=":frmMovs:tblMovs" 
+                                 oncomplete="PF('tabMovs').show();" />
+                
+                <p:remoteCommand name="addTrans" actionListener="#{remesas.agregarMovimiento}" />
+                
+            </h:form>
+            
+            <f:facet name="footer" >
+                Remesa
+            </f:facet>
+        </p:panel>
+        
+        <!--        Tabla de proyecto-->
+        <p:dialog widgetVar="tabProy" resizable="false" header="Proyectos" modal="true" closeOnEscape="true" >
+            
+            <h:form id="tabProyects" >
+                
+                <p:dataTable id="tbProy" value="#{remesas.listProy}" var="cont" rowKey="#{cont.id_proyecto}"
+                             selection="#{remesas.ps}" selectionMode="single" paginator="true" rows="15" 
+                             style="width: 460px">
+                
+                    
+                    <p:column headerText="No. Proyecto" >
+                        <h:outputText value="#{cont.id_proyecto}" />
+                    </p:column>
+                    
+                    <p:column headerText="Proyecto" >
+                        <h:outputText value="#{cont.proyecto}" />
+                    </p:column>
+                    
+                    <p:ajax event="rowSelect" listener="#{remesas.obtenerProyecto}" 
+                            update=":frmRemesa:proy" oncomplete="PF('tabProy').hide();" />
+                
+                </p:dataTable>
+                
+                
+                
+            </h:form>
+            
+        </p:dialog>
+        
+        <!--Tabla movimientos-->
+        <p:dialog widgetVar="tabMovs" resizable="false" header="Movimientos" modal="true" closeOnEscape="true" >
+            <h:form id="frmMovs" >
+                <p:dataTable id="tblMovs" value="#{remesas.listMovs}" var="mov" rowKey="#{mov.id_movimiento}" 
+                             emptyMessage="No se encontraron movimientos" >
+                    <f:facet name="header">
+                        Detalle de Movimientos 
+                    </f:facet>
+                    
+                    <p:column headerText="Id Movimiento" >
+                        <h:outputText value="#{mov.id_movimiento}" />
+                    </p:column>
+                    
+                    <p:column headerText="Fecha Pago" >
+                        <h:outputText value="#{mov.fechaPago}" />
+                    </p:column>
+                    
+                    <p:column headerText="Importe" >
+                        <h:outputText value="#{mov.importeMov}" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Referencias" >
+                        <h:outputText value="#{mov.referencias}" />
+                    </p:column>
+                    
+                    <p:column headerText="Id_factura" >
+                        <h:outputText value="#{mov.id_factura}" />
+                    </p:column>
+                
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+    </h:body>
+</html>
+

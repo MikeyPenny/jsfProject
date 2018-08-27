@@ -1,0 +1,257 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core" >
+    <h:head>
+        <title>Solicitud de orde de Compra</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="cssLayout.css" />
+    </h:head>
+    <h:body>
+        
+        <div class="container">
+            <h:form id="form" class="form-horizontal" >
+                <p:growl id="growl" showDetail="true" sticky="true" life="5000" />
+
+                <p:panel id="panelDatosOC" header="Solicitud de Orden de Compra" >
+                    
+                    <div class="form-group">
+                        <div class="col-md-6" >
+                            <h:outputLabel for="nombreProyecto" value="Proyecto: *" /> 
+
+                            <p:inputText id="nombreProyecto" size="50" readonly="true" 
+                                         placeholder="Clic aquí para seleccionar proyecto" 
+                                         value="#{ordenCompraMB.nombreProyecto}" required="true" 
+                                         label="nombreProyecto" onclick="PF('dlg1').show();" styleClass="form-control" >  
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="noPresupuesto" value="No Presupuesto *" /> 
+                            <p:inputText id="noPresupuesto" size="50" readonly="true" 
+                                         placeholder="Clic aquí para seleccionar presupuesto" 
+                                         value="#{ordenCompraMB.noPresupuesto}" onclick="PF('dlg2').show();" 
+                                         label="noPresupuesto" styleClass="form-control" >  
+                            </p:inputText>
+                        </div>
+                    </div>
+                    
+                    
+                </p:panel>
+
+                <p:panel id="paneldatosGeneralesOC" header="Datos Generales de la Orden de Compra" >
+                    
+                    <div class="form-group">
+                        <div class="col-md-6" >
+                            <p:outputLabel for="requi" value="No. Requisición: " /><br/>
+                            <p:selectOneMenu id="requi" value="#{ordenCompraMB.selectedIdRequisiciones}">
+                                <f:selectItem itemLabel="Seleccione" itemValue="" />
+                                <f:selectItems value="#{ordenCompraMB.noRequisiciones}" />
+                                <p:ajax event="change" update="tablaRequisicionesSol" 
+                                        listener="#{ordenCompraMB.listarInsumosRequicisiones}" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="noOrdenCompra" value="No de Orden Compra: " /> 
+                            <p:inputText id="noOrdenCompra" label="noOrdenCompra" size="10" readonly="true" 
+                                         value="#{formOrdenCompraMB.noOrdenCompra}" styleClass="form-control" >  
+                            </p:inputText>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-md-6" >
+                            <h:outputLabel for="fechaSolicitud" value="Fecha de Solicitud: " /> 
+                            <p:inputText id="fechaSolicitud" label="fechaSolicitud" size="40" readonly="true" 
+                                         value="#{formOrdenCompraMB.fechaSolicitud}" styleClass="form-control" >  
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="iva" value="I.V.A.: " /> 
+                            <p:inputText id="iva" label="iva" size="10" readonly="true" 
+                                         value="#{formOrdenCompraMB.iva}%" styleClass="form-control" >  
+                            </p:inputText>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-md-6" >
+                            <h:outputLabel for="pago" value="Forma de Pago: " /> 
+                            <p:inputText id="pago" label="pago" size="40" value="#{formOrdenCompraMB.formaPago}" 
+                                         styleClass="form-control" >  
+                            </p:inputText>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-md-12" >
+                            <h:outputLabel for="proveedor" value="Proveedor: " /> 
+                            <p:inputText id="proveedor" label="proveedor" size="100" onclick="PF('dlg4').show();" 
+                                         readonly="true" placeholder="Clic aquí para seleccionar proveedor" 
+                                         value="#{formOrdenCompraMB.proveedor}" styleClass="form-control" >  
+                            </p:inputText>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-md-12" >
+                            <h:outputLabel for="dirEmbarque" value="Dirección de Embarque: " /> 
+                            <p:inputText id="dirEmbarque" label="dirEmbarque" size="100" value="#{ordenCompraMB.direccion}" 
+                                         styleClass="form-control" readonly="true" >  
+                            </p:inputText>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                    
+
+<!--                    <h:panelGrid columns="4" >
+                        <h:outputLabel for="ant" value="Anticipo" />
+                        <p:selectBooleanCheckbox id="ant" value="ordenCompraMB.anticipo}" >
+                            <p:ajax update="pct" />
+                        </p:selectBooleanCheckbox>
+
+                        <h:outputLabel for="" value="Porcentaje" />
+                        <p:inputText id="pct" value="ordenCompraMB.pctAnt}" disabled="!ordenCompraMB.anticipo}" />
+                    </h:panelGrid>-->
+
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <p:commandButton value="GENERAR ORDEN DE COMPRA" update=":form:growl,noOrdenCompra" actionListener="#{ordenCompraMB.guardarOrdenCompra}"/>
+                    </h:panelGrid>
+
+                </p:panel>
+
+                <p:panel id="panelInsumos" header="Insumo" >
+                    <p:remoteCommand update=":form:tablaRequisicionesSol" name="upd" />
+                    <p:dataTable id ="tablaRequisicionesSol"  editable="true" editMode="cell" value="#{ordenCompraMB.listInsumos}" emptyMessage="No se han seleccionado alguna Requisición" var="reqSol" >
+
+                        <p:ajax event="cellEdit" update=":form:tablaRequisicionesSol,:form:growl" listener="#{ordenCompraMB.onCellEdit}" oncomplete="upd();"/>
+
+                        <p:column headerText="Num." sortBy="#{reqSol.idControl}">
+                            <h:outputText value="#{reqSol.idControl}" />
+                        </p:column>
+
+                        <p:column headerText="Clave Insumo">
+                            <h:outputText value="#{reqSol.cveInsumo}" />
+                        </p:column>
+
+                        <p:column headerText="Insumo">
+                            <h:outputText value="#{reqSol.concepto}" />
+                        </p:column>
+
+                        <p:column headerText="Unidad">
+                            <h:outputText value="#{reqSol.unidad}" />
+                        </p:column>
+
+                        <p:column headerText="Cantidad">
+                            <h:outputText value="#{reqSol.cantidad}" >
+                            <f:convertNumber pattern="###,###,###.000" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="P. Unitario">
+                            <p:cellEditor id="cantidadEdit">
+                                <f:facet name="output"><p:inputText value="#{reqSol.precioUnitario}" >
+                            <f:convertNumber pattern="$ ###,###,###.00" />
+                            </p:inputText></f:facet>
+                                <f:facet name="input"><p:inputText value="#{reqSol.precioUnitario}"/></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="Importe">
+                            <h:outputText value="#{reqSol.importe}" >
+                            <f:convertNumber pattern="$ ###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <f:facet name="footer">
+
+                            <h:outputText value="#{ordenCompraMB.totalOc}" >
+                            <f:convertNumber pattern="$ ###,###,###.00" />
+                            </h:outputText>
+                        </f:facet>
+
+                    </p:dataTable>
+
+                </p:panel>
+
+
+            </h:form>
+        </div>
+        
+        <p:dialog header="Seleccione un Proyecto" widgetVar="dlg1" modal="true" closable="true" resizable="false" closeOnEscape="true" >
+            <h:form id="form1">
+                <p:dataTable  rows="5" paginator="true" var="proy"  rowKey="#{proy.idProyecto}"  
+                              selectionMode="single" selection="#{ordenCompraMB.selectedProyecto}"  
+                              value="#{ordenCompraMB.listProyectos}" style="width: 460px" >
+
+                    <p:ajax event="rowSelect" update=":form:nombreProyecto,:form:noPresupuesto, :form:dirEmbarque, :form2:tablaPresupuesto" oncomplete="PF('dlg1').hide()"  listener="#{ordenCompraMB.buscarPresupuestos}" />
+
+                    <p:column headerText="Num.">
+                        <h:outputText value="#{proy.idProyecto}" />
+                    </p:column>
+
+                    <p:column headerText="Proyecto">
+                        <h:outputText value="#{proy.proyecto}" />
+                    </p:column>
+                </p:dataTable>
+
+            </h:form>
+        </p:dialog> 
+        
+        <p:dialog header="Seleccione un Presupuesto" widgetVar="dlg2" modal="true" closable="true" resizable="false" closeOnEscape="true" >
+            <h:form id="form2">
+                <p:dataTable  rows="5" paginator="true"  id ="tablaPresupuesto" 
+                              emptyMessage="No se tienen Presupuestos para este Proyecto" var="pres"  
+                              rowKey="#{pres.idPresupuesto}"  selectionMode="single" 
+                              selection="#{ordenCompraMB.selectedPresupuesto}"  
+                              value="#{ordenCompraMB.listPresupuesto}" style="width: 460px" >
+                    <p:ajax event="rowSelect" update=":form:noPresupuesto,:form:requi" oncomplete="PF('dlg2').hide()" listener="#{ordenCompraMB.listarRequisiciones}" />
+
+                    <p:column headerText="Num.">
+                        <h:outputText value="#{pres.idPresupuesto}" />
+                    </p:column>
+
+                    <p:column headerText="Proyecto">
+                        <h:outputText value="#{pres.presupuesto}" />
+                    </p:column>
+                </p:dataTable>
+
+            </h:form>
+        </p:dialog> 
+        
+        
+        <p:dialog header="Seleccione Proveedor" widgetVar="dlg4" modal="true" closable="true" resizable="false" closeOnEscape="true" >
+            <h:form id="form4">
+                <p:dataTable  rows="5" paginator="true"  id ="tablaProveedor" 
+                              emptyMessage="No se tienen Proveedores" var="proo"  rowKey="#{proo.idProveedor}"  
+                              selectionMode="single" selection="#{ordenCompraMB.selectedProveedor}"  
+                              value="#{ordenCompraMB.listProveedores}" style="width: 460px" >
+
+                    <p:ajax event="rowSelect" update="tablaProveedor,:form:proveedor,:form:dirEmbarque" oncomplete="PF('dlg4').hide()" listener="#{ordenCompraMB.seleccionarProveedor}" />
+
+                    <p:column headerText="Num.">
+                        <h:outputText value="#{proo.idProveedor}" />
+                    </p:column>
+
+                    <p:column headerText="Proveedor">
+                        <h:outputText value="#{proo.razonSocial}" />
+                    </p:column>
+                </p:dataTable>
+
+            </h:form>
+        </p:dialog>
+        
+        
+            
+        
+        <h:outputScript library="js" name="bootstrap.js" />
+    </h:body>
+</html>
+

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="36be6dc1-d98a-49f4-a8a0-94556635dac8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="txtObra" class="java.lang.String"/>
+	<parameter name="txtDireccion" class="java.lang.String"/>
+	<field name="partida" class="java.lang.String"/>
+	<field name="cvePartida" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="81" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="272" height="20" uuid="f6fd5503-f0de-42d1-be77-513ffed44097"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ADMINISTRACIÓN Y CONSTRUCTIBILIDAD SA DE CV]]></text>
+			</staticText>
+			<image>
+				<reportElement x="437" y="10" width="118" height="69" uuid="c6db4d9d-dd28-4418-b041-cfee7ab006d8"/>
+				<imageExpression><![CDATA["C:\\Users\\Mickey\\Pictures\\adco.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="20" width="100" height="20" uuid="5741814c-8aa0-4e5c-9e80-f688d1fe6f77"/>
+				<text><![CDATA[Dependencia:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="100" height="20" uuid="93045bf6-5b6a-461a-a6b2-d1dd4cbdf6a0"/>
+				<text><![CDATA[Obra:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="59" width="100" height="20" uuid="9a6ce65c-49c4-4416-a922-53152a39a96e"/>
+				<text><![CDATA[Lugar:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="40" width="100" height="20" uuid="0ee54650-0082-4f33-9bff-e6964ae89f4c"/>
+				<textFieldExpression><![CDATA[$P{txtObra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="60" width="100" height="20" uuid="212dd1ce-c91f-4b0b-96b7-88c02357d95c"/>
+				<textFieldExpression><![CDATA[$P{txtDireccion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

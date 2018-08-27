@@ -1,0 +1,303 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Editar Avance</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="cssLayout.css" />
+    </h:head>
+    <h:body>
+        
+        <div class="container" >
+            <h:form id="frmEdAvance" class="form-horizontal" >
+                
+                <p:growl id="msgAvance" showDetail="true" life="5000" />
+                <p:panel header="Editar Avance" >
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="proy" value="Proyecto: " />
+                            <p:inputText id="proy" value="#{edAvan.proyecto}" onclick="PF('tabProy').show();"
+                                         styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="pres" value="Presupuesto: " />
+                            <p:inputText id="pres" value="#{edAvan.presupuesto}" onclick="PF('dialPres').show();"
+                                         styleClass="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="cont" value="Contrato: " />
+                            <p:inputText id="cont" value="#{edAvan.nroContto}" onclick="PF('dialConts').show();"
+                                         styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="avnce" value="Avance: " />
+                            <p:inputText id="avnce" value="#{edAvan.nroAvance}" onclick="PF('dialAvance').show();"
+                                         styleClass="form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="sumAvnce" value="Suma Avance: " />
+                            <p:inputText id="sumAvnce" value="#{edAvan.sumaAvance}" onclick="PF('dialAvance').show();"
+                                         styleClass="form-control" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </div>
+                    </div>
+                    
+                </p:panel>
+                
+                
+                <p:dataTable id="tblInsAvn" value="#{edAvan.listInsAv}" var="insAv" rowKey="#{insAv.id_avanceInsCont}"
+                             emptyMessage="No hay datos para mostrar" selection="#{edAvan.insSel}" selectionMode="single" >
+
+                    <f:facet name="header" >
+                        Detalle del Avance
+                    </f:facet>   
+
+                    <p:column headerText="ID" >
+                        <h:outputText value="#{insAv.id_avanceInsCont}" />
+                    </p:column>
+
+                    <p:column headerText="Código" >
+                        <h:outputText value="#{insAv.codInsumo}" />
+                    </p:column>
+
+                    <p:column headerText="Descripción" >
+                        <h:outputText value="#{insAv.descripcion}" />
+                    </p:column>
+
+                    <p:column headerText="Unidad" >
+                        <h:outputText value="#{insAv.unidad}" />
+                    </p:column>
+
+                    <p:column headerText="Cantidad contrato" >
+                        <h:outputText value="#{insAv.cantContrato}" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Cantidad por anvazar" >
+                        <h:outputText value="#{insAv.cantContrato.subtract(insAv.sumaAvance)}" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>     
+                    </p:column>
+
+                    <p:column headerText="Cantidad Avance" >
+                        <h:outputText value="#{insAv.avance}"  >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Precio Unitario" >
+                        <h:outputText value="#{insAv.presUnit}" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Importe Avance" >
+                        <h:outputText value="#{insAv.importeAvnce}" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:ajax event="rowSelect" listener="#{edAvan.elegirInsAvance()}" update=":frmEditSbctto" 
+                            oncomplete="PF('dialSubctto').show();" />
+
+                </p:dataTable>
+                    
+                <br/>
+                <div class="form-group">
+                    <div class="col-md-6" >
+                        <p:commandButton id="btnRegEdit" value="Registrar Cambios" 
+                                         actionListener="#{edAvan.registrarCambio()}" update="frmEdAvance" />
+                        
+                        <p:commandButton id="btnDelete" value="Eliminar" 
+                                         actionListener="#{edAvan.eliminarAvance()}" update="frmEdAvance" />
+                        
+                    </div>
+                </div>
+                
+            </h:form>
+            
+            
+            
+            <p:dialog widgetVar="tabProy" resizable="false" header="Proyectos" modal="true" closeOnEscape="true" width="400px" >
+            
+                <h:form id="tabProyects" >
+
+                    <p:dataTable id="tbProy" value="#{edAvan.listaProy}" var="cont" rowKey="#{cont.id_proyecto}"
+                                 selection="#{edAvan.ps}" selectionMode="single" paginator="true" rows="15" >
+
+
+                        <p:column headerText="No. Proyecto" >
+                            <h:outputText value="#{cont.id_proyecto}" />
+                        </p:column>
+
+                        <p:column headerText="Proyecto" >
+                            <h:outputText value="#{cont.proyecto}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{edAvan.obtenerProyecto}" 
+                                update=":frmEdAvance:proy, :presForm:tblPres" oncomplete="PF('tabProy').hide();" />
+
+                    </p:dataTable>
+
+                </h:form>
+
+            </p:dialog>
+            
+            <p:dialog header="Presupuesto" widgetVar="dialPres" resizable="false" modal="true" width="400px" closeOnEscape="true" >
+                <h:form id="presForm" >
+                    <p:dataTable id="tblPres" value="#{edAvan.listaPres}" var="pres" rowKey="#{pres.id_presupuesto}" 
+                                 selection="#{edAvan.presB}" selectionMode="single" 
+                                 paginator="true" rows="10" >
+
+                        <p:column headerText="No. Presupuesto"  >
+                            <h:outputText value="#{pres.id_presupuesto}" />
+                        </p:column>
+
+                        <p:column headerText="Presupuesto"  >
+                            <h:outputText value="#{pres.presupuesto}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{edAvan.obtenerPresupuesto}" 
+                                update=":frmEdAvance:pres, :tbConttrats:tbContts" oncomplete="PF('dialPres').hide();" />  
+
+                    </p:dataTable>
+
+
+
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog widgetVar="dialConts" header="Pre Contratos" resizable="false" width="400px" closeOnEscape="true" modal="true" >
+                <h:form id="tbConttrats" >
+                    <p:dataTable id="tbContts" value="#{edAvan.listPre}" var="cont" rowKey="#{cont.id_contrato}"
+                                 selectionMode="single" selection="#{edAvan.c}" paginator="true" rows="10" >
+
+                        <p:column headerText="Contrato No.">
+                            <h:outputText value="#{cont.numContrato}" />
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="#{cont.tipo}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{edAvan.seleccionarContrat}" 
+                                update=":frmAvan:tblAvance, :frmEdAvance:cont" 
+                                oncomplete="PF('dialConts').hide();" />
+
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog widgetVar="dialAvance" header="Avances" resizable="false" modal="true" width="600px" closeOnEscape="true">
+                <h:form id="frmAvan" >
+                    <p:dataTable id="tblAvance" value="#{edAvan.listAv}" var="avn" selectionMode="single" selection="#{edAvan.ab}"
+                                 rowKey="#{avn.id_avance}" >
+
+                        <p:column headerText="Consecutivo" >
+                            <h:outputText value="#{avn.nroAvance}" />
+                        </p:column>
+
+                        <p:column headerText="Fecha" >
+                            <h:outputText value="#{avn.fecha}" />
+                        </p:column>
+
+                        <p:column headerText="Importe" >
+                            <h:outputText value="#{avn.importeEstimacion}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Estatus" >
+                            <h:outputText value="#{avn.estatusAvance}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{edAvan.seleccionarAvance}" oncomplete="PF('dialAvance').hide();"
+                                update=":frmEdAvance:avnce, :frmEdAvance:tblInsAvn, :frmEdAvance:sumAvnce" />
+
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog header="Editar Subcontrato" widgetVar="dialSubctto" resizable="false" modal="true" width="600px" 
+                closeOnEscape="true" >
+                <h:form id="frmEditSbctto" class="form-horizontal">
+                    <p:growl id="msgEdit" showDetail="true" life="5000" />
+                    <div class="form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="edCodIns" value="Código Insumo" />
+                            <p:inputText id="edCodIns" value="#{edAvan.codIns}" styleClass="form-control" readonly="true" />
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="edUnidIns" value="Unidad" />
+                            <p:inputText id="edUnidIns" value="#{edAvan.unidIns}" styleClass="form-control" readonly="true" />
+                        </div>
+                    </div>
+
+                    <div class="form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="edCantInsDis" value="Cantidad Disponible:" />
+                            <p:inputText id="edCantInsDis" value="#{edAvan.cantidCtrl}" styleClass="form-control" 
+                                         readonly="true" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </div>
+                    </div>
+
+                    <div class="form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="edCantIns" value="Cantidad:" />
+                            <p:inputText id="edCantIns" value="#{edAvan.cantIns}" styleClass="form-control" >
+                                <p:ajax event="change" listener="#{edAvan.cambiarCantidadPrecio()}" 
+                                        update="editImpIns, msgEdit, edCantIns, btnEdit" />
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="editPreIns" value="Precio Unitario" />
+                            <p:inputText id="editPreIns" value="#{edAvan.unitIns}" styleClass="form-control" readonly="true" >
+
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </div>
+                    </div>
+
+                    <div class="form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="editImpIns" value="Importe" />
+                            <p:inputText id="editImpIns" value="#{edAvan.impIns}" styleClass="form-control" readonly="true" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6" >
+                            <p:commandButton id="btnEdit" value="Editar" actionListener="#{edAvan.cambiarAvance()}" 
+                                             oncomplete="PF('dialSubctto').hide();" 
+                                             update=":frmEdAvance:tblInsAvn, :frmEdAvance:sumAvnce" 
+                                             disabled="#{edAvan.btnEdit}" />
+                            
+                        </div>
+                    </div>
+
+                </h:form>
+            </p:dialog>
+            
+        </div>
+        
+            
+        <h:outputScript library="js" name="bootstrap.js" />
+    </h:body>
+</html>
+

@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Inventario de Almacén</title>
+    </h:head>
+    <h:body>
+        <h:body>
+            <p:panel>
+                <h:form id="frmInvent" >
+                    
+                    <p:fieldset legend="Búsqueda">
+                        <h:panelGrid columns="4">
+                            <h:outputLabel for="proy" value="Proyecto" />
+                            <p:inputText id="proy" value="#{inventarioMB.proyecto}" 
+                                         onclick="PF('tabProy').show();" />
+                            
+                            <h:outputLabel for="pres" value="Presupuesto" />
+                            <p:inputText id="pres" value="#{inventarioMB.presupuesto}" 
+                                         onclick="PF('dialPres').show();" />
+                            
+                        </h:panelGrid>
+                    </p:fieldset>
+                    
+                    <br/><br/>
+                    <p:dataTable id="tblInv" emptyMessage="No se encontraron registros" value="#{inventarioMB.listaInv}"
+                                 var="mat" rowKey="#{mat.id_insumoreq}" >
+                        
+                        <p:column headerText="Cod Insumo" >
+                            <h:outputText value="#{mat.codInsumo}" />
+                        </p:column>
+                        
+                        <p:column headerText="Descripción" >
+                            <h:outputText value="#{mat.descripcion}" />
+                        </p:column>
+                        
+                        <p:column headerText="Unidad" >
+                            <h:outputText value="#{mat.unidades}" />
+                        </p:column>
+                        
+                        <p:column headerText="Fecha" filterBy="#{mat.fecha}" filterMatchMode="contains" >
+                            <h:outputText value="#{mat.fecha}" />
+                        </p:column>
+                        
+                        <p:column headerText="Inventario" >
+                            <h:outputText value="#{mat.cantidad}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column headerText="Toma Física" >
+                            <h:outputText value="Editable" />
+                        </p:column>
+                        
+                    </p:dataTable>
+                </h:form>
+            </p:panel>
+            
+            <!--        Tabla de proyecto-->
+        <p:dialog widgetVar="tabProy" resizable="false" header="Proyectos" modal="true" closeOnEscape="true" >
+            
+            <h:form id="tabProyects" >
+                
+                <p:dataTable id="tbProy" value="#{inventarioMB.listProy}" var="cont" rowKey="#{cont.idProyecto}"
+                             selection="#{inventarioMB.proySel}" selectionMode="single" paginator="true" rows="15" >
+                
+                    
+                    <p:column headerText="No. Proyecto" >
+                        <h:outputText value="#{cont.idProyecto}" />
+                    </p:column>
+                    
+                    <p:column headerText="Proyecto" >
+                        <h:outputText value="#{cont.proyecto}" />
+                    </p:column>
+                    
+                    <p:ajax event="rowSelect" listener="#{inventarioMB.seleccionarProyecto}" 
+                            update=":frmInvent:proy, :presForm:tblPres" oncomplete="PF('tabProy').hide();" />
+                
+                </p:dataTable>
+                
+            </h:form>
+            
+        </p:dialog>
+            
+        <!--        Tabla presupuesto-->
+        <p:dialog header="Presupuesto" widgetVar="dialPres" resizable="false" modal="true" width="400px" closeOnEscape="true" >
+            <h:form id="presForm" >
+                <p:dataTable id="tblPres" value="#{inventarioMB.listPres}" var="pres" rowKey="#{pres.idPresupuesto}" 
+                             selection="#{inventarioMB.preSel}" selectionMode="single" 
+                             paginator="true" rows="10" >
+
+                    <p:column headerText="No. Presupuesto"  >
+                        <h:outputText value="#{pres.idPresupuesto}" />
+                    </p:column>
+
+                    <p:column headerText="Presupuesto"  >
+                        <h:outputText value="#{pres.presupuesto}" />
+                    </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{inventarioMB.seleccionarPresupuesto}" 
+                            update=":frmInvent:pres, :frmInvent:tblInv" oncomplete="PF('dialPres').hide();" />  
+
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+            
+        </h:body>
+    </h:body>
+</html>
+

@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Vale de Consumo</title>
+    </h:head>
+    <h:body>
+        <h:form id="form1">
+            <p:dialog header="Seleccione un Proyecto" widgetVar="dlg1" modal="true" closable="true" resizable="false" 
+                      closeOnEscape="true" >
+                <p:dataTable id="proyectos" rows="5" paginator="true"  var="proy"  rowKey="#{proy.idProyecto}"  
+                             selectionMode="single" selection="#{valeConsumoMB.selectedProyecto}"  
+                             value="#{valeConsumoMB.listProyectos}" style="width: 460px" >
+                    <p:ajax event="rowSelect" update=":form:nombreProyecto,:form3:tablaInsumos" oncomplete="PF('dlg1').hide()" listener="#{valeConsumoMB.listarInsumos}" />
+
+                    <p:column headerText="Num.">
+                        <h:outputText value="#{proy.idProyecto}" />
+                    </p:column>
+
+                    <p:column headerText="Proyecto">
+                        <h:outputText value="#{proy.proyecto}" />
+                    </p:column>
+
+                </p:dataTable>
+            </p:dialog>
+        </h:form>
+        
+        <p:dialog header="Seleccione Insumos" widgetVar="dlgins" modal="true" closable="true" resizable="false" 
+                  closeOnEscape="true" >
+            <h:form id="form3">
+                <p:commandButton value="AGREGAR INSUMOS"  actionListener="#{valeConsumoMB.agregarInsumos}" oncomplete="PF('dlgins').hide()" update=":form3:tablaInsumos,:form:tablaInsumosSol" />
+                <br />
+                <p:dataTable id ="tablaInsumos" rows="10" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15" paginator="true"  emptyMessage=" *** SIN INSUMOS *** " 
+                             var="ins"  rowKey="#{ins.idInsumoRequisicion}"  value="#{valeConsumoMB.listaInsumos}" 
+                             selection="#{valeConsumoMB.selectedListaInsumos}" style="width: 460px" >
+                    <p:column selectionMode="multiple" style="width:40px;text-align:center"/>
+                    
+                    <p:column headerText="Num.">
+                        <h:outputText value="#{ins.idInsumoRequisicion}" />
+                    </p:column>
+
+                    <p:column headerText="Código Insumo">
+                        <h:outputText value="#{ins.claveInsumo}" />
+                    </p:column>
+
+                    <p:column headerText="Insumo">
+                        <h:outputText value="#{ins.nombreInsumo}" />
+                    </p:column>
+                    
+
+                    <p:column headerText="Unidades">
+                        <h:outputText value="#{ins.unidades}" />
+                    </p:column>
+
+                    <p:column headerText="Cantidad">
+                        <h:outputText value="#{ins.cantidad}" >
+                            <f:convertNumber pattern="###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+
+            </h:form>
+        </p:dialog>
+        
+        
+        
+        <h:form id="form" >
+            <p:growl id="growl" life="5000" showDetail="true" />
+            
+            <p:panel id="panelProyecto" header="Datos de Proyecto" style="margin-bottom:20px">
+                <h:panelGrid columns="4" cellpadding="10">
+                    <h:outputLabel for="nombreProyecto" value="Proyecto*:" /> 
+                    <p:inputText id="nombreProyecto" size="50" readonly="true" placeholder="Clic aquí para seleccionar proyecto" value="#{valeConsumoMB.nombreProyecto}" required="true" label="nombreProyecto" onclick="PF('dlg1').show();" />  
+                    
+                    <h:outputLabel for="numValeConsumo" value="Número de Vale:" /> 
+                    <p:inputText id="numValeConsumo" readonly="true" value="#{valeConsumoMB.numValeConsumo}" label="numValeConsumo" />  
+                    
+                    <h:outputLabel for="fechaElaboracion" value="Fecha Elaboración:" /> 
+                    <p:inputText id="fechaElaboracion" readonly="true" value="#{valeConsumoMB.fechaElaboracion}" label="fechaElaboracion" />  
+                    
+                 </h:panelGrid>
+                
+                <h:panelGrid columns="2" cellpadding="5">
+                    
+                    <p:commandButton value="AGREGAR INSUMOS" onclick="PF('dlgins').show()" />
+                    
+                    <p:commandButton value="ELIMINAR INSUMOS" update=":form3:tablaInsumos,:form:tablaInsumosSol" actionListener="#{valeConsumoMB.eliminarInsumos}"/>
+                    <p:commandButton value="AUTORIZAR" update="tablaInsumosSol,growl,numValeConsumo" actionListener="#{valeConsumoMB.autorizarValeConsumo}"/>
+                </h:panelGrid>
+                
+            </p:panel>
+            
+            <p:panel id="panelInsumos" header="Insumos" style="margin-bottom:20px">
+                <p:remoteCommand update="panelInsumos" name="upd" />
+                    
+                <p:dataTable id ="tablaInsumosSol" editable="true" editMode="cell" emptyMessage="Seleccione un Proyecto" var="insu" value="#{valeConsumoMB.listaInsumosSol}" selection="#{valeConsumoMB.selectedListaInsumosSol}"  rowKey="#{insu.idInsumoRequisicion}" >
+                    <p:ajax event="cellEdit" update=":form:tablaInsumosSol,:form:growl" listener="#{valeConsumoMB.onCellEdit}" oncomplete="upd();"/>
+                    <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                    <p:column headerText="Id Insumo">
+                        <h:outputText value="#{insu.idInsumoRequisicion}" />
+                    </p:column>
+
+                    <p:column headerText="Clave Insumo">
+                        <h:outputText value="#{insu.claveInsumo}" />
+                    </p:column>
+
+                    <p:column headerText="Insumo">
+                        <h:outputText value="#{insu.nombreInsumo}" />
+                    </p:column>
+                    
+                    <p:column headerText="Unidades">
+                        <h:outputText value="#{insu.unidades}" />
+                    </p:column>
+                    
+                    <p:column headerText="Cantidad">
+                        <p:cellEditor id="cantidadEdit">
+                            <f:facet name="output"><p:inputText value="#{insu.cantidad}" >
+                        <f:convertNumber pattern="###,###,###.00" />
+                        </p:inputText></f:facet>
+                            <f:facet name="input"><p:inputText value="#{insu.cantidad}"><f:convertNumber pattern="###,###,###.00" /></p:inputText></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                </p:dataTable>
+                
+                
+            </p:panel>
+            
+            
+        </h:form>
+        
+    </h:body>
+</html>
+

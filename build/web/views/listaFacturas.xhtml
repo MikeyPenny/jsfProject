@@ -1,0 +1,177 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Listado Facturas</title>
+    </h:head>
+    <h:body>
+        <p:panel>
+            <f:facet name="header">
+                Facturas por Proyecto
+            </f:facet>
+            
+            <h:form id="frmFactura">
+                
+                <h:panelGrid id="grdDatosBusq" columns="4" >
+                    <h:outputLabel for="proy" value="Proyecto" />
+                    <p:inputText id="proy" value="#{tablaFact.id_proyecto}" onclick="PF('tabProy').show();" />
+
+                    <h:outputLabel for="pres" value="Presupuesto" />
+                    <p:inputText id="pres" value="#{tablaFact.id_presupuesto}" onclick="PF('dialPres').show();" />
+                    
+                    <p:commandButton id="btnBuscar" value="Buscar Facturas" actionListener="#{tablaFact.listarFacturas}" 
+                                     update="tblFacturas" />
+                </h:panelGrid>
+                <br/>
+                <p:dataTable id="tblFacturas" value="#{tablaFact.listaFact}" var="fac" selectionMode="single" 
+                             selection="#{tablaFact.fb}" rowKey="#{fac.id_factura}" >
+                    
+                    <p:column headerText="Número de Factura" >
+                        <h:outputText value="#{fac.noFactura}" />
+                    </p:column>
+                    
+                    <p:column headerText="Fecha">
+                        <h:outputText value="#{fac.fechaFactura}" />
+                    </p:column>
+                    
+                    <p:column headerText="Contratista" filterBy="#{fac.contratista}" >
+                        <h:outputText value="#{fac.contratista}" />
+                    </p:column>
+                    
+                    <p:column headerText="Tipo">
+                        <h:outputText value="#{fac.tipoFactura}" />
+                    </p:column>
+                    
+                    <p:column headerText="Total">
+                        <h:outputText value="#{fac.importeTotal}" >
+                            <f:convertNumber type="currency" currencySymbol="$" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Estatus">
+                        <h:outputText value="#{fac.estatusFact}" />
+                    </p:column>
+                    
+                    
+                    
+                    <p:ajax event="rowSelect" listener="#{tablaFact.seleccionarFactura}" 
+                            oncomplete="PF('editFac').show();" update=":frmFactEd:grdFac" />
+                    
+                </p:dataTable>
+                
+            </h:form>
+            
+            
+            <f:facet name="footer">
+                Listado de Facturas
+            </f:facet>
+            
+        </p:panel>
+        
+        <!--        Tabla de proyecto-->
+        <p:dialog widgetVar="tabProy" resizable="false" header="Proyectos" modal="true" closeOnEscape="true" >
+            
+            <h:form id="tabProyects" >
+                
+                <p:dataTable id="tbProy" value="#{tablaFact.listProy}" var="cont" rowKey="#{cont.id_proyecto}"
+                             selection="#{tablaFact.ps}" selectionMode="single" paginator="true" rows="15" 
+                             style="width: 460px" > 
+                
+                    
+                    <p:column headerText="No. Proyecto" >
+                        <h:outputText value="#{cont.id_proyecto}" />
+                    </p:column>
+                    
+                    <p:column headerText="Proyecto" >
+                        <h:outputText value="#{cont.proyecto}" />
+                    </p:column>
+                    
+                    <p:ajax event="rowSelect" listener="#{tablaFact.obtenerProyecto}" 
+                            update=":frmFactura:proy, :presForm:tblPres" oncomplete="PF('tabProy').hide();" />
+                
+                </p:dataTable>
+                
+                
+                
+            </h:form>
+            
+        </p:dialog>
+        
+        <!--        Tabla presupuesto-->
+        <p:dialog header="Presupuesto" widgetVar="dialPres" resizable="false" modal="true" closeOnEscape="true" >
+            <h:form id="presForm" >
+                <p:dataTable id="tblPres" value="#{tablaFact.listaPres}" var="pres" rowKey="#{pres.id_presupuesto}" 
+                             selection="#{tablaFact.presB}" selectionMode="single" 
+                             paginator="true" rows="10" style="width: 460px" >
+
+                    <p:column headerText="No. Presupuesto"  >
+                        <h:outputText value="#{pres.id_presupuesto}" />
+                    </p:column>
+
+                    <p:column headerText="Presupuesto"  >
+                        <h:outputText value="#{pres.presupuesto}" />
+                    </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{tablaFact.obtenerPresupuesto}" 
+                            update=":frmFactura:pres" oncomplete="PF('dialPres').hide();" />  
+
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+        <!--Formulario editar factura-->
+        
+        <p:dialog widgetVar="editFac" resizable="false" header="Editar Factura" modal="true" closeOnEscape="true" >
+            <h:form id="frmFactEd" >
+                <h:panelGrid id="grdFac" columns="4" >
+                    
+                    <h:outputLabel for="numFactura" value="Factura: " />
+                    <p:inputText id="numFactura"  value="#{tablaFact.noFactura}" />
+                    
+                    <h:outputLabel for="importFac" value="Importe: " />
+                    <p:inputText id="importFac"  value="#{tablaFact.importeFactura}" />
+                    
+                    <h:outputLabel for="amortFactura" value="Amortización: " />
+                    <p:inputText id="amortFactura"  value="#{tablaFact.amortAntcpoFactura}" />
+                    
+                    <h:outputLabel for="cntrtsta" value="Contratista o Proveedor: " />
+                    <p:inputText id="cntrtsta"  value="#{tablaFact.contratista}" />
+                    
+                    <h:outputLabel for="rtnGarantia" value="Garantía Retenida: " />
+                    <p:inputText id="rtnGarantia"  value="#{tablaFact.retFdoGtia}" />
+                    
+                    <h:outputLabel for="rtnFlete" value="Retención Fletes: " />
+                    <p:inputText id="rtnFlete"  value="#{tablaFact.retFlete}" />
+                    
+                    <h:outputLabel for="rtnRenta" value="Retención Renta: " />
+                    <p:inputText id="rtnRenta"  value="#{tablaFact.retRenta}" />
+                    
+                    <h:outputLabel for="totalFact" value="Importe Total: " />
+                    <p:inputText id="totalFact"  value="#{tablaFact.importeTotal}" />
+                    
+                    <h:outputLabel for="estatusFact" value="Estatus: " />
+                    <p:inputText id="estatusFact"  value="#{tablaFact.estatusFact}" readonly="true" />
+                    
+                    <h:outputLabel for="fechaFact" value="Fecha: " />
+                    <p:inputText id="fechaFact"  value="#{tablaFact.fechaFactura}" readonly="true" />
+                    
+                    
+                </h:panelGrid>
+                
+                
+                
+                <p:commandButton id="btnEliminar" value="Cancelar Factura" actionListener="#{tablaFact.eliminarFactura}" 
+                                 oncomplete="PF('editFac').hide();" update=":frmFactura:tblFacturas" />
+                
+                <p:commandButton id="btnCerrar" value="Cerrar" onclick="PF('editFac').hide();" />
+                
+            </h:form>
+        </p:dialog> 
+        
+        
+    </h:body>
+</html>
+

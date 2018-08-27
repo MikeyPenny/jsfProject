@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Listado de Requisiciones</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p:growl id="growl" life="5000" showDetail="true" />
+            <p:dataTable  rows="5" paginator="true"  id ="tablaRequisiciones" emptyMessage="No se tienen Requisiciones" var="req" value="#{listadoRequisicionesMB.listaRequisicion}" rowKey="#{req.idRequicision}" >
+                <f:facet name="header">
+                    Listado de Requisicones
+                </f:facet>
+                
+                <p:column headerText="No Requisición"  filterBy="#{req.noRequisicion}"  filterMatchMode="contains">
+                    <h:outputText value="#{req.noRequisicion}" />
+                </p:column>
+
+                <p:column headerText="Fecha de Solicitud">
+                    <h:outputText value="#{req.fechaSolicitud}" />
+                </p:column>
+
+                <p:column headerText="Proyecto" filterBy="#{req.nomProyecto}"   filterMatchMode="contains">
+                    <h:outputText value="#{req.nomProyecto}" />
+                </p:column>
+
+                <p:column headerText="Presupuesto" filterBy="#{req.nomPresupuesto}"  filterMatchMode="contains">
+                    <h:outputText value="#{req.nomPresupuesto}" />
+                </p:column>
+
+                <p:column headerText="Estatus" filterBy="#{req.estatus}" filterMatchMode="contains" >
+                    <h:outputText value="#{req.estatus}" />
+                </p:column>
+
+                <p:column headerText="Usuario Solicitante" filterBy="#{req.usuarioSolicitante}" filterMatchMode="contains">
+                    <h:outputText value="#{req.usuarioSolicitante}" />
+                </p:column>
+                
+                <p:column headerText="Autorizo" filterBy="#{req.usuarioAutorizacion}" filterMatchMode="contains">
+                    <h:outputText value="#{req.usuarioAutorizacion}" />
+                </p:column>
+                
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>
+

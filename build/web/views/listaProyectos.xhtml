@@ -1,0 +1,227 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>ERP TunnigSys</title>
+    </h:head>
+    <h:body>
+        <p:panel header="Lista Proyectos" footer="Proyectos Registrados" >
+            <h:form id="tablaProyectos" >
+                
+                
+                <p:dataTable id="proyTable" value="#{altaMBean.listaProyectos}" var="d" 
+                             rowKey="#{d.idProyecto}" selectionMode="single" selection="#{altaMBean.proySelec}"
+                                 paginator="true" rows="15" scrollable="true" >
+                        
+                        <p:column headerText="Proyecto" >
+                            <h:outputText value="#{d.proyecto}" />
+                        </p:column>
+                        
+                        <p:column headerText="No. De Contrato" >
+                            <h:outputText value="#{d.numContrato}" />
+                        </p:column>
+                        
+                        <p:column headerText="Fecha Inicio de Proyecto" >
+                            <h:outputText value="#{d.fechaIniCad}" />
+                        </p:column>
+                        
+                        <p:column headerText="Fecha Fin del proyecto" >
+                            <h:outputText value="#{d.fechaFinCad}" />
+                        </p:column>
+                        
+                        <p:column headerText="Importe Contratado" >
+                            <h:outputText value="#{d.importeContto}" />
+                        </p:column>
+                        
+                        <p:column headerText="Cliente" >
+                            <h:outputText value="#{d.cliente}" />
+                        </p:column>
+                    
+                    <p:ajax event="rowSelect" listener="#{altaMBean.seleccionarProyecto}"  update=":proyEditForm"
+                            oncomplete="PF('proyEdit').show();" />
+                        
+                    </p:dataTable>
+                
+                
+            </h:form>
+            
+            
+            
+        </p:panel>
+        
+        <p:dialog header="Editar Proyecto" widgetVar="proyEdit" resizable="false" modal="true" closeOnEscape="true" 
+                  >
+            <p:scrollPanel style="width: 900px; height: 500px" >
+                <h:form id="proyEditForm" >
+
+                    <p:fieldset legend="Editar #{altaMBean.proyecto}" style="margin-bottom: 20px">
+                    <h:panelGrid columns="4">
+                        <p:outputLabel for="proyTxt" value="Proyecto" />
+                        <p:inputText id="proyTxt" value="#{altaMBean.proyecto}" />
+
+                        <p:outputLabel for="contto" value="No. de Contrato: " />
+                        <p:inputText id="contto" value="#{altaMBean.numContrato}" />
+
+                        <p:outputLabel for="tipoContto" value="Tipo de Contrato: " />
+                        <p:inputText id="tipoContto" value="#{altaMBean.contrato}" />
+
+                        <p:outputLabel for="importe" value="Importe Contrato: " />
+                        <p:inputText id="importe" value="#{altaMBean.importeFormat}" />
+
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <h:panelGroup>
+                            <h:outputText value="Pct. %" style="margin-right: 15px"/>
+                            <h:outputText value="Importe" />
+                        </h:panelGroup>
+
+
+                        <p:outputLabel for="formPago" value="Forma De Pago: " />
+                        <p:inputText id="formPago" value="#{altaMBean.formaDPago}" />
+
+                        <p:outputLabel for="anticipo" value="Anticipo: " />
+                        <h:panelGroup>
+                            <p:inputText id="pctAntcpo" value="#{altaMBean.pctAntcpo}" 
+                                         style="width: 40px; margin-right: 10px" >
+
+                                <p:ajax event="change" listener="#{altaMBean.editarPorcentajes(altaMBean.pctAntcpo, 1)}" 
+                                        update="anticipo" />
+                            </p:inputText>
+                            <p:inputText id="anticipo" value="#{altaMBean.cadAntcpo}" style="width: 136px" 
+                                         readonly="true" />
+                        </h:panelGroup>
+                        <p:outputLabel for="fechIni" value="Fecha Inicio: " />
+                        <p:calendar id="fechIni" value="#{altaMBean.fechInicio}" />
+
+                        <p:outputLabel for="fechFin" value="Fecha Final: " />
+                        <p:calendar id="fechFin" value="#{altaMBean.fechFin}" />
+
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <h:panelGroup>
+                            <h:outputText value="Pct. %" style="margin-right: 15px"/>
+                            <h:outputText value="Importe" />
+                        </h:panelGroup>
+
+                        <p:outputLabel for="cliente" value="Cliente: " />
+                        <p:inputText id="cliente" value="#{altaMBean.cliente}" required="true" onclick="PF('dialClte').show();" />
+
+                        <p:outputLabel for="fGarantia" value="Fondo de Garantía: " />
+                        <h:panelGroup>
+                            <p:inputText id="pctGarantia" value="#{altaMBean.pctGarantia}"
+                                         style="width: 40px; margin-right: 10px" >
+
+                                <p:ajax event="change" listener="#{altaMBean.editarPorcentajes(altaMBean.pctGarantia, 2)}" 
+                                        update="fGarantia" />
+                            </p:inputText>
+                            <p:inputText id="fGarantia" value="#{altaMBean.garantia}" style="width: 136px" 
+                                         readonly="true" />
+                        </h:panelGroup>
+
+                        <h:panelGroup/>
+                        <h:panelGroup>
+                            <h:outputText value="Pct. %" style="margin-right: 15px"/>
+                            <h:outputText value="Importe" />
+                        </h:panelGroup>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <p:outputLabel for="fianzaAnt" value="Fianza de Anticipo: " />
+                        <h:panelGroup>
+                            <p:inputText id="pctFianzaAntcpo" value="#{altaMBean.pctFianzaAntcpo}" 
+                                         style="width: 40px; margin-right: 10px" >
+                                <p:ajax event="change" listener="#{altaMBean.editarPorcentajes(altaMBean.pctFianzaAntcpo, 3)}" 
+                                        update="fianzaAnt" />
+                            </p:inputText>
+                            <p:inputText id="fianzaAnt" value="#{altaMBean.fianzaAntcpo}" style="width: 136px" 
+                                         readonly="true" />
+                        </h:panelGroup>
+
+                        <p:outputLabel for="importeTerceros" value="Todo Riesgo: " />
+                        <p:inputText id="importeTerceros" value="#{altaMBean.terceros}" style="width: 136px"  />
+
+                        <p:outputLabel for="importeCump" value="Fianza Cumplimiento: " />
+                        <h:panelGroup>
+                            <p:inputText id="pctCumpli" value="#{altaMBean.pctCumplimiento}" 
+                                         style="width: 40px; margin-right: 10px" >
+                                <p:ajax event="change" listener="#{altaMBean.editarPorcentajes(altaMBean.pctCumplimiento, 4)}" 
+                                        update="importeCump" />
+                            </p:inputText>
+                            <p:inputText id="importeCump" value="#{altaMBean.cumplimiento}" style="width: 136px" 
+                                         readonly="true" />
+                        </h:panelGroup>
+
+                        <p:outputLabel for="importeCiv" value="Responsabilidad Civil: " />
+                        <h:panelGroup>
+
+                            <p:inputText id="importeCiv" value="#{altaMBean.respCivil}" style="width: 136px" 
+                                          />
+                        </h:panelGroup>
+
+                        <p:outputLabel for="importeVic" value="Fianza Vicios Ocultos: " />
+                        <h:panelGroup>
+                            <p:inputText id="pctVicios" value="#{altaMBean.pctVicios}" 
+                                         style="width: 40px; margin-right: 10px" >
+                                <p:ajax event="change" listener="#{altaMBean.editarPorcentajes(altaMBean.pctVicios, 5)}" 
+                                        update="importeVic" />
+                            </p:inputText>
+                            <p:inputText id="importeVic" value="#{altaMBean.vicios}" style="width: 136px" 
+                                         readonly="true" />
+                        </h:panelGroup>
+
+
+
+
+
+                    </h:panelGrid>
+                    </p:fieldset>
+                    <br/>
+                    <h:outputText value="Totales" style="font-size: x-large; font-style: inherit" />
+                    <br/><br/>
+                    <center>
+                        <h:outputLabel for="fianzaTot" value="Fianzas: " style="margin-left: 20px" />
+                        <p:inputText id="fianzaTot" value="#{altaMBean.sumaFianzasCad}" style="margin-left: 10px" 
+                                     readonly="true" />
+
+                        <h:outputLabel for="segurosTot" value="Seguros: " style="margin-left: 20px" />
+                        <p:inputText id="segurosTot" value="#{altaMBean.sumaRiesCad}" style="margin-left: 10px" 
+                                     readonly="true" />
+                    </center>
+                    <br/><br/>
+                    <center>
+                        <p:commandButton id="btnEditar" actionListener="#{altaMBean.guardarCambios}" value="Guardar cambios" 
+                                         update=":tablaProyectos" oncomplete="PF('proyEdit').hide();" />
+
+                        <p:commandButton id="btnCancelarEd" value="Cancelar" onclick="PF('proyEdit').hide();" />
+                    </center>
+
+                </h:form>
+            </p:scrollPanel>
+        </p:dialog>
+
+        <p:dialog header="Eligir cliente" widgetVar="dialClte" resizable="false" modal="true" closeOnEscape="true" >
+            <h:form id="frmCte" >
+                <p:dataTable id="tblClte" value="#{altaMBean.listCte}" var="cte" rowKey="#{cte.id_cliente}" 
+                             selectionMode="single" paginator="true" rows="10" selection="#{altaMBean.cteSelected}" >
+
+                    <p:column headerText="Nombre o Razón Social" >
+                        <h:outputText value="#{cte.razon}" />
+                    </p:column>
+
+                    <p:column headerText="RFC" >
+                        <h:outputText value="#{cte.rfcCliente}" />
+                    </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{altaMBean.seleccionarCliente}" oncomplete="PF('dialClte').hide();" 
+                            update=":proyEditForm:cliente" />
+
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+    </h:body>
+</html>
+

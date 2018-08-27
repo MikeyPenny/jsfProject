@@ -1,0 +1,539 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Editar Concepto</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="cssLayout.css" />
+    </h:head>
+    <h:body>
+        <div class="container">
+            <h:form id="formEditaCncp" class="form-horizontal" >
+                <p:growl id="growl" showDetail="true" life="5000" />
+                <p:panel header="Editar concepto">
+                    
+                    <div class="row form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="txtProyecto" value="Proyecto: " />
+                            <p:inputText id="txtProyecto" value="#{editarCon.proyecto}" onclick="PF('dialProy').show();" 
+                                      styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="txtPrespto" value="Presupuesto: " />
+                            <p:inputText id="txtPrespto" value="#{editarCon.presupuesto}" onclick="PF('dialPres').show();"
+                                         styleClass="form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group">
+                        <div class="col-md-6" >
+                            <h:outputLabel for="codSub" value="Partida" />
+                            <p:inputText id="codSub" value="#{editarCon.codPrtda}" onclick="PF('partDial').show();"
+                                         styleClass="form-control"/>
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="subPrt" value="SubPartida" />
+                            <p:inputText id="subPrt" value="#{editarCon.subPrtda}" onclick="PF('subPartDial').show();"
+                                         styleClass="form-control"/>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group" >
+                        <div class="col-md-6" >
+                            <p:commandButton id="btnVer" value="Buscar" 
+                                             actionListener="#{editarCon.listarConceptos()}" 
+                                             oncomplete="PF('dialConceps').show();"
+                                             update=":conceps:tblV2"/>
+                        </div>        
+                    </div>
+                    
+                    <div class="row form-group">
+                        <div class="col-md-6" >
+                            <h:outputLabel for="codigo" value="Código de concepto" />
+                            <p:inputText id="codigo" value="#{editarCon.codConcepto}" styleClass="form-control"
+                                         readonly="true"/>
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="desc" value="Descripción" />
+                            <p:inputTextarea id="desc" autoResize="false" maxlength="350" value="#{editarCon.descConc}"
+                                             styleClass="form-control">
+                                <p:ajax event="change" listener="#{editarCon.cambiarUnidad()}" update="btnGuardar" />
+                            </p:inputTextarea>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group">
+                        <div class="col-md-6" >
+                            <h:outputLabel for="unCon" value="Unidad" /><br/>
+                            <p:selectOneMenu value="#{editarCon.unidConcepto}" id="unCon"  >
+                                <f:selectItem itemLabel="Seleccionar Unidad" itemValue="" />
+                                <f:selectItems value="#{editarCon.listUnid}" var="unid" itemLabel="#{unid.unidad}-#{unid.desc_unidad}"
+                                               itemValue="#{unid.unidad}"/>
+                                <p:ajax event="itemSelect" listener="#{editarCon.cambiarUnidad()}" update="btnGuardar" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="cant" value="Cantidad" />
+                            <p:inputText id="cant" value="#{editarCon.cantidad}" styleClass="form-control" >
+                                <p:ajax event="change" listener="#{editarCon.actualizaImporte}" update="imp, cant, btnGuardar" />
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group">
+                        <div class="col-md-6" >
+                            <h:outputLabel for="pUnit" value="Precio Unitario" />
+                            <p:inputText id="pUnit" value="#{editarCon.presUnit}" readonly="true" styleClass="form-control" >
+                                <p:ajax event="change" listener="#{crearConcepto.actualizaImporte}" update="imp" />
+                                <f:convertNumber pattern="###,###,###,###.000000" />
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="imp" value="Importe" />
+                            <p:inputText id="imp" readonly="true" value="#{editarCon.importe}" styleClass="form-control" >
+                                <f:convertNumber pattern="###,###,###,###.000000" />
+                            </p:inputText>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group">
+                        <div class="col-md-6" >
+                            <p:commandButton id="btnAgregar" value="Agregar Insumo" actionListener="#{editarCon.crearInsumo()}" 
+                                             oncomplete="PF('insumo').show();" disabled="#{editarCon.btnInsumo}"
+                                             update=":frmIns, :frmCatMat, :frmCatSC"/>
+                        </div>
+                        <div class="col-md-6" >
+                            <p:commandButton id="btnGuardar" value="Editar Concepto" actionListener="#{editarCon.editarConcepto}" 
+                                             update="formEditaCncp, :frmIns, growl" disabled="#{editarCon.btnRegCon}" />
+                        </div>
+                    </div>
+                    
+                    <p:dataTable id="tblIns" value="#{editarCon.listaIns}" var="ins" rowKey="#{ins.id_insumo}" >
+
+                        <p:column headerText="Código Insumo" >
+                            <h:outputText value="#{ins.codInsumo}" />
+                        </p:column>
+
+                        <p:column headerText="Descripción" >
+                            <h:outputText value="#{ins.descripIns}" />
+                        </p:column>
+
+                        <p:column headerText="Unidad" >
+                            <h:outputText value="#{ins.unidadIns}" />
+                        </p:column>
+
+                        <p:column headerText="Cantidad" >
+                            <h:outputText value="#{ins.cantIns}" >
+                                <f:convertNumber pattern="###,###,###,###.000000" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Precio Unitario" >
+                            <h:outputText value="#{ins.costoIns}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Importe" >
+                            <h:outputText value="#{ins.importeIns}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column>
+                            <p:commandButton id="btnElim" value="Eliminar" action="#{editarCon.eliminaInsumo()}"
+                                         oncomplete="onDeleteIns();" >
+                                <f:setPropertyActionListener value="#{ins}" target="#{editarCon.insElim}" />
+                            </p:commandButton>    
+                        </p:column>
+
+                        <p:column>
+                            <p:commandButton id="btnEditIns" value="Editar" action="#{editarCon.editarInsumo()}"
+                                             oncomplete="PF('editInsumo').show();" update=":frmEditIns" >
+                                <f:setPropertyActionListener value="#{ins}" target="#{editarCon.insElim}" />
+                            </p:commandButton>    
+                        </p:column>
+
+                    </p:dataTable>
+                    <p:remoteCommand name="onDeleteIns" update="tblIns, pUnit, imp, btnGuardar" />
+                    
+                </p:panel>
+            </h:form>
+            
+            <p:dialog header="Proyectos" widgetVar="dialProy" resizable="false" modal="true" width="400px" closeOnEscape="true" >
+                <h:form>
+                    <p:dataTable id="tblProy" value="#{editarCon.listaProy}" var="p" rowKey="#{p.id_proyecto}" 
+                                 selection="#{editarCon.proySel}" selectionMode="single" 
+                             paginator="true" rows="15" scrollable="true" style="width: 360px">
+
+                    <p:column headerText="No. Proyecto"  >
+                        <h:outputText value="#{p.id_proyecto}" />
+                    </p:column>
+
+                    <p:column headerText="Proyecto"  >
+                        <h:outputText value="#{p.proyecto}" />
+                    </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{editarCon.obtenerProyecto}" 
+                            update=":formEditaCncp:txtProyecto,:presForm:tblPres"
+                            oncomplete="PF('dialProy').hide();" />
+
+                </p:dataTable>
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog header="Presupuesto" widgetVar="dialPres" resizable="false" modal="true" width="400px" closeOnEscape="true" >
+                <h:form id="presForm" >
+                    <p:dataTable id="tblPres" value="#{editarCon.listaPres}" var="pres" rowKey="#{pres.id_presupuesto}" 
+                                 selection="#{editarCon.presB}" selectionMode="single" 
+                             paginator="true" scrollable="true" style="width: 360px">
+
+                    <p:column headerText="No. Presupuesto"  >
+                        <h:outputText value="#{pres.id_presupuesto}" />
+                    </p:column>
+
+                    <p:column headerText="Presupuesto"  >
+                        <h:outputText value="#{pres.presupuesto}" />
+                    </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{editarCon.obtenerPresupuesto}" 
+                                update=":formEditaCncp:txtPrespto, :frmPart:tblPart"
+                                oncomplete="PF('dialPres').hide();" />
+
+                </p:dataTable>
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog header="Lista Partidas" widgetVar="partDial" resizable="false" modal="true" closeOnEscape="true" >
+                <h:form id="frmPart" >
+                    <p:growl id="msjPart" showDetail="true" life="5000"  />
+                    <p:dataTable id="tblPart" value="#{editarCon.listaPB}" var="part" rowKey="#{part.id_partida}"
+                                 paginator="true" rows="10" selectionMode="single" selection="#{editarCon.partSel}" 
+                                 style="width: 360px" >
+
+                        <p:column headerText="Código de Partida">
+                            <h:outputText value="#{part.nivel}" />
+                        </p:column>
+
+                        <p:column headerText="Descripcion">
+                            <h:outputText value="#{part.descripcion}" />
+                        </p:column>
+
+
+                        <p:ajax event="rowSelect" listener="#{editarCon.obtenerPartida}" 
+                                oncomplete="PF('partDial').hide();" 
+                                update=":formEditaCncp:codSub, :frmSubPart:tblSubPart" />
+
+                    </p:dataTable>
+
+
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog header="Lista SubPartidas" widgetVar="subPartDial" resizable="false" modal="true" closeOnEscape="true" >
+                <h:form id="frmSubPart" >
+                    <p:growl id="msjSubPart" showDetail="true" life="5000"  />
+                    <p:dataTable id="tblSubPart" value="#{editarCon.listSubPrt}" var="sub" rowKey="#{sub.id_partida}"
+                                 paginator="true" rows="10" selectionMode="single" selection="#{editarCon.subPrtSel}" 
+                                 style="width: 360px">
+
+                        <p:column headerText="Código de Partida">
+                            <h:outputText value="#{sub.nivel}" />
+                        </p:column>
+
+                        <p:column headerText="Descripcion">
+                            <h:outputText value="#{sub.descripcion}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{editarCon.obtenerSubPartida}" 
+                                oncomplete="PF('subPartDial').hide();" update=":formEditaCncp:subPrt" />
+
+                    </p:dataTable>
+
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog header="Conceptos" widgetVar="dialConceps" resizable="false" modal="true" closeOnEscape="true" >
+                <h:form id="conceps" >
+                    <p:dataTable id="tblV2" value="#{editarCon.list}" var="conc" rowKey="#{conc.id_concepto}" 
+                                 selectionMode="single" selection="#{editarCon.concept}" paginator="true" rows="5"
+                                 filteredValue="#{editarCon.filtCon}" scrollable="true" >
+                        
+                        <p:column headerText="Cod. Concepto" filterBy="#{conc.codConcepto}" filterMatchMode="contains" >
+                            <h:outputText value="#{conc.codConcepto}" />
+                        </p:column>
+
+                        <p:column headerText="Descripcion" filterBy="#{conc.descripcion}" filterMatchMode="contains" >
+                            <h:outputText value="#{conc.descripcion}" />
+                        </p:column>
+
+                        <p:column headerText="Unidad" >
+                            <h:outputText value="#{conc.unidad}" />
+                        </p:column>
+
+                        <p:column headerText="Cantidad" >
+                            <h:outputText value="#{conc.cadCant}" />
+                        </p:column>
+
+                        <p:column headerText="P. Unitario" >
+                            <h:outputText value="#{conc.cadPrecio}" />
+                        </p:column>
+
+                        <p:column headerText="Importe" >
+                            <h:outputText value="#{conc.cadImp}" />
+                        </p:column>
+                        
+                        <p:ajax event="rowSelect" listener="#{editarCon.seleccionarConcepto}" 
+                                update=":formEditaCncp"
+                                oncomplete="PF('dialConceps').hide();" />
+
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog header="Crear Insumo" widgetVar="insumo" resizable="false" modal="true" closeOnEscape="true" >
+                <h:form id="frmIns" class="form-horizontal" >
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <h:outputLabel value="Elija el tipo de Insumo" /><br/>
+                        </div>
+                        <div class="col-md-6" >
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="col-md-6">
+
+                            <p:commandButton id="btnMaterial" value="Materiales" actionListener="#{editarCon.consultarMateriales()}" 
+                                             update=":frmCatMat:tblMateriales, selFamilia, insPresUnit" 
+                                             oncomplete="PF('catMaterial').show();" 
+                                             disabled="#{editarCon.btnMaterial}" />
+
+                        </div>
+                        <div class="col-md-6">
+                            <p:commandButton id="btnSubcontrato" value="Subcontrato" actionListener="#{editarCon.listarCatSc()}" 
+                                             update=":frmCatSC:tblSubctto, frmIns" oncomplete="PF('catSC').show();" 
+                                             disabled="#{editarCon.btnSubctto}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <h:outputLabel for="selFamilia" value="Clave" />
+                            <p:inputText id="selFamilia" value="#{editarCon.cveMat}" styleClass="form-control"
+                                         disabled="#{editarCon.actCveMat}" >
+                                <p:ajax event="change" listener="#{editarCon.validarCodigo()}"
+                                                update=":formEditaCncp:growl, selFamilia, descIns, un, insPresUnit" />
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="codSC" value="Código de Subcontrato" /><br/>
+                            <p:inputText id="codSC" value="#{editarCon.codSubCtto}" styleClass="form-control"  >
+
+                            </p:inputText>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <h:outputLabel for="descIns" value="Descripción" />
+                            <p:inputTextarea id="descIns" value="#{editarCon.material}" autoResize="false"  />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="un" value="Unidad" /><br/>
+                            <p:selectOneMenu value="#{editarCon.unidMat}" id="un"  >
+                                <f:selectItem itemLabel="Seleccionar Unidad" itemValue="" />
+                                <f:selectItems value="#{editarCon.listUnid}" var="unid" itemLabel="#{unid.unidad}-#{unid.desc_unidad}"
+                                               itemValue="#{unid.unidad}"/> 
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <h:outputLabel for="" value="Cantidad" />
+                            <p:inputText id="cantIns" value="#{editarCon.cantIns}" styleClass="form-control"  >
+                                <f:convertNumber pattern="###,###,###,###.000000" />
+                                <p:ajax event="change" listener="#{editarCon.actualizarImpInsumo}" update="impIns" />
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="" value="Precio Unitario" />
+                            <p:inputText id="insPresUnit" value="#{editarCon.presUnitIns}" styleClass="form-control"
+                                         disabled="#{editarCon.actPresUnit}" >
+                                <f:convertNumber pattern="###,###,###,###.000000" />
+                                <p:ajax event="change" listener="#{editarCon.actualizarImpInsumo}" update="impIns" />
+                            </p:inputText>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <h:outputLabel for="impIns" value="Importe" />
+                            <p:inputText id="impIns" value="#{editarCon.impIns}" readonly="true" styleClass="form-control" >
+                                <f:convertNumber pattern="###,###,###,###.000000" />
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <p:commandButton id="btnAgregaIns" value="Agregar" actionListener="#{editarCon.agregarInsumo}" 
+                                             update=":formEditaCncp:tblIns, frmIns, :formEditaCncp:pUnit, 
+                                             :formEditaCncp:imp, :formEditaCncp:growl, :formEditaCncp:btnGuardar" 
+                                             oncomplete="PF('insumo').hide();" />
+
+                        </div>
+                        <div class="col-md-6">
+                            <p:commandButton id="btnCancelAdd" value="Cancelar" onclick="PF('insumo').hide();" />
+                        </div>
+                    </div>
+
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog header="Editar Insumo" widgetVar="editInsumo" resizable="false" modal="true" closeOnEscape="true" >
+                <h:form id="frmEditIns" class="form-horizontal" >
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <h:outputLabel value="Elija el tipo de Insumo" /><br/>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <h:outputLabel for="editSelFamilia" value="Clave" />
+                            <p:inputText id="editSelFamilia" value="#{editarCon.cveMat}" styleClass="form-control"
+                                         disabled="#{editarCon.actCveMat}" >
+                                <p:ajax event="change" listener="#{editarCon.validarCodigo()}"
+                                                update=":formEditaCncp:growl, editSelFamilia, editDescIns, editUn, 
+                                                editInsPresUnit" />
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="editCodSC" value="Código de Subcontrato" /><br/>
+                            <p:inputText id="editCodSC" value="#{editarCon.codSubCtto}" styleClass="form-control" readonly="true" >
+
+                            </p:inputText>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <h:outputLabel for="editDescIns" value="Descripción" />
+                            <p:inputTextarea id="editDescIns" value="#{editarCon.material}" autoResize="false" readonly="true"  />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="editUn" value="Unidad" /><br/>
+                            <p:selectOneMenu value="#{editarCon.unidMat}" id="editUn"  >
+                                <f:selectItem itemLabel="Seleccionar Unidad" itemValue="" />
+                                <f:selectItems value="#{editarCon.listUnid}" var="unid" itemLabel="#{unid.unidad}-#{unid.desc_unidad}"
+                                               itemValue="#{unid.unidad}"/> 
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <h:outputLabel for="editCantIns" value="Cantidad" />
+                            <p:inputText id="editCantIns" value="#{editarCon.cantIns}" styleClass="form-control"  >
+                                <f:convertNumber pattern="###,###,###,###.000000" />
+                                <p:ajax event="change" listener="#{editarCon.actualizarImpInsumo}" update="editImpIns" />
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="editInsPresUnit" value="Precio Unitario" />
+                            <p:inputText id="editInsPresUnit" value="#{editarCon.presUnitIns}" styleClass="form-control"
+                                         disabled="#{editarCon.actPresUnit}" >
+                                <f:convertNumber pattern="###,###,###,###.000000" />
+                                <p:ajax event="change" listener="#{editarCon.actualizarImpInsumo}" update="editImpIns" />
+                            </p:inputText>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <h:outputLabel for="editImpIns" value="Importe" />
+                            <p:inputText id="editImpIns" value="#{editarCon.impIns}" readonly="true" styleClass="form-control" >
+                                <f:convertNumber pattern="###,###,###,###.000000" />
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <p:commandButton id="btnEditaIns" value="Editar" actionListener="#{editarCon.agregarCambioInsumo}" 
+                                             update=":formEditaCncp:tblIns, frmIns, :formEditaCncp:pUnit, 
+                                             :formEditaCncp:imp, :formEditaCncp:growl, :formEditaCncp:btnGuardar" 
+                                             oncomplete="PF('editInsumo').hide();" />
+
+                        </div>
+                        <div class="col-md-6">
+                            <p:commandButton id="btnCancelAdd" value="Cancelar" onclick="PF('editInsumo').hide();" />
+                        </div>
+                    </div>
+
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog header="Catálogo de Materiales" widgetVar="catMaterial" resizable="false" modal="true" closeOnEscape="true"
+                  >
+                <h:form id="frmCatMat" >
+                    <p:dataTable id="tblMateriales" value="#{editarCon.listMat}" var="mat" rowKey="#{mat.id_material}"
+                                 selection="#{editarCon.matSel}" selectionMode="single" paginator="true" rows="10"
+                                 filteredValue="#{editarCon.filtroMat}"  >
+
+                        <p:column headerText="Clave" filterBy="#{mat.claveMat}" filterMatchMode="contains" >
+                            <h:outputText value="#{mat.claveMat}" />
+                        </p:column>
+
+                        <p:column headerText="Descripción" filterBy="#{mat.material}" filterMatchMode="contains" >
+                            <h:outputText value="#{mat.material}" />
+                        </p:column>
+
+                        <p:column headerText="Unidad" >
+                            <h:outputText value="#{mat.unidad}" />
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{editarCon.seleccionarMaterial()}" 
+                                update=":frmIns:selFamilia, :frmIns:descIns, :frmIns:un, :frmIns:btnSubcontrato, 
+                                :frmIns:insPresUnit, :frmIns:selFamilia" 
+                                oncomplete="PF('catMaterial').hide();" /> 
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog header="Catálogo de Subcontratos" widgetVar="catSC" resizable="false" modal="true" closeOnEscape="true"
+                  height="400px" width="600px" >
+                <h:form id="frmCatSC" >
+                    <p:dataTable id="tblSubctto" value="#{editarCon.catalogo}" var="sc" rowKey="#{sc.id_subcon}"
+                                 selection="#{editarCon.cat}" selectionMode="single" paginator="true" rows="10" >
+
+                        <p:column headerText="Clave"  >
+                            <h:outputText value="#{sc.clave}" />
+                        </p:column>
+
+                        <p:column headerText="Definición"  >
+                            <h:outputText value="#{sc.definicion}" />
+                        </p:column>
+
+
+                        <p:ajax event="rowSelect" listener="#{editarCon.seleccionarSC()}" 
+                                update=":frmIns:selFamilia, :frmIns:codSC, :frmIns:btnMaterial, 
+                                :frmIns:insPresUnit, :frmIns:selFamilia, :frmIns:descIns, :frmIns:un" 
+                                oncomplete="PF('catSC').hide();" /> 
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+            
+        </div>
+        
+        <h:outputScript library="js" name="bootstrap.js" />
+    </h:body>
+</html>
+

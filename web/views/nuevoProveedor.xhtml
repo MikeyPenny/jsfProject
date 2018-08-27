@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <h:head>
+        <title>Alta de Proveedor</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="cssLayout.css" />
+    </h:head>
+    <h:body>
+        
+        <div class="container">
+            <h:form id="form" class="form-horizontal" >
+                <p:growl id="growl" showDetail="true" life="5000" />
+
+                    
+                
+                <p:panel id="pn1" header="Datos del Proveedor" style="margin-bottom:20px">
+                     
+                     <div class="form-group" >
+                         <div class="col-md-12" >
+                             <h:outputLabel for="razonsocial" value="Razon Social: *" /> 
+                            <p:inputText id="razonsocial" value="#{proveedoresMB.razonSocial}" size="100" required="true" 
+                                         styleClass="form-control" />
+                         </div>
+                        
+                    </div>
+
+                    <div class="form-group" >
+                        <div class="col-md-12" >
+                            <h:outputLabel for="dirFiscal" value="Dirección Fiscal: *" /> 
+                            <p:inputText id="dirFiscal" size="100" value="#{proveedoresMB.dirFiscal}" required="true" 
+                                         styleClass="form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-12" >
+                            <h:outputLabel for="selTipoProv" value="Tipo de Proveedor: *" /><br/>
+                            <p:selectOneMenu id="selTipoProv" value="#{proveedoresMB.tipoProv}" style="width: max-content" >
+                                <f:selectItem itemLabel="Seleccionar tipo..." />
+                                <f:selectItems value="#{proveedoresMB.listProv}" var="prov" itemLabel="#{prov.tipoProveedor}" 
+                                               itemValue="#{prov.cve}" />
+                                <p:ajax event="change" />
+                            </p:selectOneMenu>
+                        </div>        
+                    </div>
+                     
+                </p:panel>
+                <p:panel id="pn2" header="Datos Bancarios" style="margin-bottom:20px">
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="rfc" value="R.F.C.: *" /> 
+                            <p:inputText id="rfc" size="30" value="#{proveedoresMB.rfc}" required="true" 
+                                         styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="diasCredito" value="Días de Crédito: *" /> 
+                            <p:inputText id="diasCredito" size="30" value="#{proveedoresMB.diasCredito}" required="true" 
+                                         styleClass="form-control" />  
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="telefono" value="Teléfono: *" /> 
+                            <p:inputText id="telefono" size="30" value="#{proveedoresMB.telefono}" required="true" 
+                                         styleClass="form-control" />  
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="fax" value="Fax: " /> 
+                            <p:inputText id="fax" size="30" value="#{proveedoresMB.fax}" styleClass="form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="correo" value="Correo Electrónico: *" /> 
+                            <p:inputText id="correo" size="30" value="#{proveedoresMB.email}" required="true" 
+                                         styleClass="form-control"/>  
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="contacto" value="Nombre de Contacto: *" /> 
+                            <p:inputText id="contacto" size="30" value="#{proveedoresMB.nombreContacto}" required="true" 
+                                         styleClass="form-control" />  
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="nomBanco" value="Nombre del banco: *" /> 
+                            <p:inputText id="nomBanco" size="50" value="#{proveedoresMB.nombreBanco}" required="true" 
+                                         styleClass="form-control" />  
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="plaza" value="Número y Nombre Plaza: " /> 
+                            <p:inputText id="plaza" size="50" value="#{proveedoresMB.numNomPlaza}" styleClass="form-control" /> 
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="cuenta" value="No. Cuenta: *" /> 
+                            <p:inputText id="cuenta" size="50" value="#{proveedoresMB.noCuenta}" required="true" 
+                                         styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="interbancaria" value="No Cuenta SPEUA y/o Interbancaria: *" /> 
+                            <p:inputText id="interbancaria" size="50" value="#{proveedoresMB.noCuentaInterbancaria}" required="true" 
+                                         styleClass="form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="sucursal" value="No. y Nombre Sucursal: (11 dígitos)*" /> 
+                            <p:inputText id="sucursal" size="50" value="#{proveedoresMB.numNomSucursal}" required="true" 
+                                         styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="clabe" value="C.L.A.B.E.: (18 dígitos)*" /> 
+                            <p:inputText id="clabe" size="50" value="#{proveedoresMB.clabe}" required="true" styleClass="form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <h:outputLabel for="ciudad" value="Ciudad: *" /> 
+                            <p:inputText id="ciudad" size="50" value="#{proveedoresMB.ciudad}" required="true" styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="aba" value="No. de ABA: (9 dígitos)" /> 
+                            <p:inputText id="aba" size="50" value="#{proveedoresMB.noAba}" styleClass="form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" >
+                        <div class="col-md-6">
+                            <p:commandButton id="btnNuevoProveedor"  value="Guardar Datos" 
+                                             update="form" actionListener="#{proveedoresMB.nuevoProveedor()}" />
+                        </div>
+                    </div>
+                    
+                </p:panel> 
+            </h:form>
+        </div>
+        
+            
+        
+        <h:outputScript library="js" name="bootstrap.js" />
+    </h:body>
+</html>
+

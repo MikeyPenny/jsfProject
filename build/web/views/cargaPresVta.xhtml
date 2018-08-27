@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Cargar Presupuesto Venta</title>
+    </h:head>
+    <h:body>
+        <p:panel header="Carga Presupuesto Venta" footer="Carga Automática de Archivo Excel" >
+            <h:form id="frmCarg" enctype="multipart/form-data">
+                <p:growl id="messages" showDetail="true" />
+                <p:fieldset>
+                    <h:panelGrid columns="4" >
+                        <h:outputLabel for="proy" value="Proyecto: " />
+                        <p:inputText id="proy" value="#{cargaVta.proyecto}" onclick="PF('dialProy').show();" />
+
+                        <h:outputLabel for="pres" value="Presupuesto: " />
+                        <p:inputText id="pres" value="#{cargaVta.presupuesto}" onclick="PF('dialPres').show();" />
+                        <br/><br/> 
+                    </h:panelGrid>
+                    <p:fileUpload mode="advanced" label="Buscar..." uploadLabel="Cargar" cancelLabel="Cancelar"
+                                      fileUploadListener="#{cargaVta.handleFileUploadListener}" update="messages"
+                                      style="width: 600px" />
+                </p:fieldset>
+            </h:form>
+            
+        </p:panel>
+        
+        <p:dialog header="Proyectos" widgetVar="dialProy" resizable="false" modal="true" width="400px" closeOnEscape="true" >
+            <h:form>
+            <p:dataTable id="tblProy" value="#{cargaVta.listaProy}" var="p" rowKey="#{p.id_proyecto}" 
+                         selection="#{cargaVta.proySel}" selectionMode="single" 
+                         paginator="true" rows="15" >
+
+                <p:column headerText="No. Proyecto"  >
+                    <h:outputText value="#{p.id_proyecto}" />
+                </p:column>
+
+                <p:column headerText="Proyecto"  >
+                    <h:outputText value="#{p.proyecto}" />
+                </p:column>
+
+                <p:ajax event="rowSelect" listener="#{cargaVta.obtenerProyecto}" 
+                        update=":frmCarg:proy,:presForm:tblPres"
+                        oncomplete="PF('dialProy').hide();" />
+
+            </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+        <p:dialog header="Presupuesto" widgetVar="dialPres" resizable="false" modal="true" width="400px" closeOnEscape="true" >
+            <h:form id="presForm" >
+                <p:dataTable id="tblPres" value="#{cargaVta.listaPres}" var="pres" rowKey="#{pres.id_presupuesto}" 
+                             selection="#{cargaVta.presB}" selectionMode="single" 
+                         paginator="true" scrollable="true" style="width: 360px">
+
+                <p:column headerText="No. Presupuesto"  >
+                    <h:outputText value="#{pres.id_presupuesto}" />
+                </p:column>
+
+                <p:column headerText="Presupuesto"  >
+                    <h:outputText value="#{pres.presupuesto}" />
+                </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{cargaVta.obtenerPresupuesto}" update=":frmCarg:pres"
+                        oncomplete="PF('dialPres').hide();" />
+
+            </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+    </h:body>
+</html>
+

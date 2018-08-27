@@ -1,0 +1,416 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        
+        <title>Editar Contratos</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="cssLayout.css" />
+        
+    </h:head>
+    <h:body>
+        
+        <div class="container">
+            <p:panel header="Editar Contratos" >
+                <h:form id="contForm" >
+
+                    <p:growl id="msgContrat" showDetail="true" life="5000" />
+
+                    <div class="row form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="selProy" value="Proyecto" />
+                            <p:inputText id="selProy" value="#{contrato.proyecto}" onclick="PF('tabProy').show();"
+                                         styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="selPres" value="Presupuesto" />
+                            <p:inputText id="selPres" value="#{contrato.presupto}" onclick="PF('tabPres').show();"
+                                         styleClass="form-control"/>
+                        </div>
+                    </div>
+
+                    <div class="row form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="numContto" value="Contrato" />
+                            <p:inputText id="numContto" value="#{contrato.numContrato}" onclick="PF('dialConts').show();" 
+                                         readonly="true" styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="contto" value="Tipo de Contrato" />
+                            <p:inputText id="contto" value="#{contrato.tipoContrat}" 
+                                         style="font-size: small; " readonly="true" styleClass="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="impContto" value="Importe" />
+                            <p:inputText id="impContto" value="#{contrato.importeContrato}" readonly="true" styleClass="form-control" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6" >
+                            <h:outputLabel for="estatus" value="Estatus" />
+                            <p:inputText id="estatus" value="#{contrato.estatusContto}" readonly="true" styleClass="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group" >
+                        <div class="col-md-6" >
+                            <h:outputLabel for="cntrtista" value="Contratista"  />
+                            <p:inputText id="cntrtista" value="#{contrato.contratista}" 
+                                         onclick="PF('dialContratista').show();" style="font-size: small" 
+                                         disabled="#{contrato.actContrat}" styleClass="form-control" />
+                        </div>
+                        <div class="col-md-6" >
+
+                        </div>
+                    </div>
+
+
+
+                    <br/>
+                    <p:dataTable id="tblCncpts" value="#{contrato.listInsum}" var="insum" rowKey="#{insum.id_insumo}" 
+                                 selectionMode="single" selection="#{contrato.insSel}" style="width: 95%" >
+
+                        <p:column headerText="Consecutivo" >
+                            <h:outputText value="#{insum.id_insumo}" />
+                        </p:column>
+
+                        <p:column headerText="Código Insumo" >
+                            <h:outputText value="#{insum.codInsumo}" />
+                        </p:column>
+
+                        <p:column headerText="Descripción" >
+                            <h:outputText value="#{insum.descripcion}" style="font-size: smaller" />
+                        </p:column>
+
+                        <p:column headerText="Unidad">
+                            <h:outputText value="#{insum.unidad}" />
+                        </p:column>
+
+                        <p:column headerText="Cantidad Disponible" >
+                            <h:outputText value="#{insum.cantCtrl}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column headerText="Cantidad" >
+                            <h:outputText value="#{insum.cantContrato}" style="width: 95%; text-align: right" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Precio Unitario" >
+                            <h:outputText value="#{insum.presUnit}" style="width: 95%; text-align: right" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Importe" >
+                            <h:outputText value="#{insum.importeCont}" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:ajax event="rowSelect" listener="#{contrato.seleccionarInsumoEd}" 
+                                oncomplete="PF('dialSubctto').show();" update=":frmEditSbctto" />
+
+                    </p:dataTable>
+                    <p:remoteCommand name="onEdit" update=":contForm:tblCncpts, :contForm:impContto"/>
+
+                    <br/>
+                    <h:panelGrid id="retenciones" columns="4" >
+
+                        <h:panelGroup/>
+                        <h:panelGroup>
+                            <h:outputText value="Porcentaje" />
+                            <h:outputText value="Importe" style="margin-left: 20px"/>
+                        </h:panelGroup>
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <h:outputLabel for="antcpoPct" value="Anticipo" />
+                        <h:panelGroup>
+                            <p:inputText id="antcpoPct" value="#{contrato.anticipoPct}" 
+                                         style="width: 40px; margin-left: 10px" >
+                                <p:ajax event="change" listener="#{contrato.calcularImporteAntcpo}" 
+                                        update="antcpoImp, antcpoPct, btnAutorizar" />
+                            </p:inputText>
+                            <p:inputText id="antcpoImp" value="#{contrato.anticipoImp}" 
+                                         style="margin-left: 40px; width: 150px" readonly="true" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </h:panelGroup>
+
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+                        <h:outputLabel for="fondoPct" value="Fondo de Garantía" />
+                        <h:panelGroup>
+                            <p:inputText id="fondoPct" value="#{contrato.fondoGtiaPct}" 
+                                         style="width: 40px; margin-left: 10px" required="true" >
+                                <p:ajax event="change" listener="#{contrato.calcularImporteGtia}" 
+                                        update="fondoImp, fondoPct, btnAutorizar" />
+                            </p:inputText>
+                            <p:inputText id="fondoImp" value="#{contrato.fondoGtiaImp}" 
+                                         style="margin-left: 40px; width: 150px" readonly="true" >
+                                <f:convertNumber pattern="###,###,###,###.00" />
+                            </p:inputText>
+                        </h:panelGroup>
+
+                        <h:panelGroup/>
+                        <h:panelGroup/>
+
+
+
+
+                    </h:panelGrid>
+                    <br/>
+
+                    <br/>
+                    <p:commandButton id="btnAutorizar" value="Editar" actionListener="#{contrato.editaContrato()}" 
+                                     disabled="#{contrato.cambio}" 
+                                     update=":contForm:estatus, btnAutorizar, :contForm:cntrtista, msgContrat, 
+                                     contForm" />
+
+                    <p:commandButton id="btnRechazo" value="Rechazar" actionListener="#{contrato.cancelarContrato}" 
+                                     update=":contForm" />
+
+                    <p:commandButton id="btnClean" value="Limpiar" actionListener="#{contrato.refresh()}"
+                                     update=":contForm" />
+
+                </h:form>
+
+            </p:panel>
+        </div>
+            
+        
+        <!--        Pantalla anticipo generado-->
+        <p:dialog widgetVar="dialAntNuevo" resizable="false" modal="true" header="Anticipo" 
+                  footer="Registro para pago de anticipo" closeOnEscape="true" >
+            <h:form id="frmAntNvo">
+                <h:panelGrid id="grdAntNvo" columns="4" >
+
+                    <h:outputLabel for="antcpoCntto" value="Num. Contrato" />
+                    <p:inputText id="antcpoCnttoNvo" value="#{contrato.numContrato}" />
+
+                    <h:outputLabel for="antcpoImprte" value="Importe" />
+                    <p:inputText id="antcpoImprteNvo" value="#{contrato.anticipoImp}" />
+
+                    <h:outputLabel for="antcpoCttsta" value="Contratista" />
+                    <p:inputText id="antcpoCttstaNvo" value="#{contrato.contratista}" />
+
+                    <h:outputLabel for="antcpotipo" value="Tipo Contrato" />
+                    <p:inputText id="antcpotipoNvo" value="#{contrato.tipoContrat}" />
+                    
+                    <h:outputLabel for="antcpoIva" value="IVA" />
+                    <p:inputText id="antcpoIva" value="#{contrato.iva}" />
+                    
+                    <h:outputLabel for="rtnFlete" value="Retención x Flete" />
+                    <p:inputText id="rtnFlete" value="#{contrato.rtnFlete}" />
+                    
+                    <h:outputLabel for="rtnRenta" value="Retención x Renta" />
+                    <p:inputText id="rtnRenta" value="#{contrato.rtnRenta}" />
+                    
+                    <h:outputLabel for="totAntcpo" value="Total Anticipo" />
+                    <p:inputText id="totAntcpo" value="#{contrato.total}" />
+                    
+                </h:panelGrid>
+                
+            </h:form>
+        </p:dialog>
+        
+<!--        Pantalla anticipo-->
+        <p:dialog widgetVar="dialAnticipo" resizable="false" modal="true" header="Anticipo" 
+                  footer="Registro para pago de anticipo" closeOnEscape="true" >
+            <h:form id="frmAntcpo">
+                <h:panelGrid id="grdAntcpo" columns="4" >
+
+                    <h:outputLabel for="antcpoCntto" value="Num. Contrato" />
+                    <p:inputText id="antcpoCntto" value="#{contrato.numContrato}" />
+
+                    <h:outputLabel for="antcpoImprte" value="Importe" />
+                    <p:inputText id="antcpoImprte" value="#{contrato.anticipoImp}" >
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                    </p:inputText>
+
+                    <h:outputLabel for="antcpoCttsta" value="Contratista" />
+                    <p:inputText id="antcpoCttsta" value="#{contrato.contratista}" />
+
+                    <h:outputLabel for="antcpotipo" value="Tipo Contrato" />
+                    <p:inputText id="antcpotipo" value="#{contrato.tipoContrat}" />
+
+                </h:panelGrid>
+                <p:commandButton id="btnRegAntcpo" value="Registrar" actionListener="#{contrato.generarAnticipo}" 
+                                 oncomplete="PF('dialAnticipo').hide(); PF('dialAntNuevo').show();" 
+                                 disabled="#{contrato.actAnticipo}" update=":frmAntNvo:grdAntNvo, :contForm:cntrtista,
+                                 :contForm:msgContrat" /> 
+                
+                <p:commandButton id="btnCancelAnt" value="Cancelar Anticipo" actionListener="#{contrato.cancelarAnticipo}"
+                                 oncomplete="PF('dialAnticipo').hide();" />
+                
+            </h:form>
+        </p:dialog>
+        
+        
+<!--        Pantalla proyecto-->
+        <p:dialog widgetVar="tabProy" resizable="false" header="Proyectos" modal="true" closeOnEscape="true" >
+            <h:form id="frmProy">
+                <p:dataTable id="tblProy" value="#{contrato.listProy}" var="proy" selection="#{contrato.ps}"
+                             selectionMode="single" rowKey="#{proy.id_proyecto}" style="width: 460px" 
+                             paginator="true" rows="8" >
+                    
+                    <p:column headerText="No.Proyecto" >
+                        <h:outputText value="#{proy.id_proyecto}" />
+                    </p:column>
+                    
+                    <p:column headerText="Proyecto" >
+                        <h:outputText value="#{proy.proyecto}" />
+                    </p:column>
+                    
+                    <p:ajax event="rowSelect" listener="#{contrato.seleccionarProyect}" 
+                            update=":contForm:selProy, :frmPres:tblPres" oncomplete="PF('tabProy').hide();" />
+                    
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+
+<!--Pantalla presupuestos-->
+        <p:dialog header="Presupuesto" widgetVar="tabPres" resizable="false" modal="true" closeOnEscape="true" >
+            <h:form id="frmPres" >
+                <p:dataTable id="tblPres" value="#{contrato.listaPres}" var="pres" selection="#{contrato.pb}"
+                             selectionMode="single" rowKey="#{pres.id_presupuesto}" style="width: 460px" >
+
+
+                    <p:column headerText="No. Presupuesto" >
+                        <h:outputText value="#{pres.id_presupuesto}" />
+                    </p:column>
+
+
+                    <p:column headerText="Presupuesto" >
+                        <h:outputText value="#{pres.presupuesto}" />
+                    </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{contrato.seleccionarPresCttos}" 
+                            update=":contForm:selPres, :tbPreConttrats:tbContts"
+                            oncomplete="PF('tabPres').hide();"/>
+
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+<!--        Pantalla Contratos-->
+        <p:dialog widgetVar="dialConts" header="Pre Contratos" resizable="false" closeOnEscape="true" modal="true" >
+            <h:form id="tbPreConttrats" >
+                <p:dataTable id="tbContts" value="#{contrato.listPre}" var="cont" rowKey="#{cont.id_contrato}"
+                             selectionMode="single" selection="#{contrato.c}" paginator="true" rows="10" style="width: 460px" >
+
+                    <p:column headerText="Contrato No.">
+                        <h:outputText value="#{cont.numContrato}" />
+                    </p:column>
+
+                    <p:column>
+                        <h:outputText value="#{cont.tipo}" />
+                    </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{contrato.seleccionarContrat}" 
+                            update=":contForm:contto, :contForm:impContto, :contForm:tblCncpts, :contForm:numContto, 
+                            :contForm:estatus, :contForm:btnAutorizar, :contForm:retenciones, :contForm:cntrtista" 
+                            oncomplete="PF('dialConts').hide();" />
+
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+<!--        Pantalla Contratista-->
+        <p:dialog widgetVar="dialContratista" resizable="false" header="Contratistas" modal="true" closeOnEscape="true" >
+        
+            <h:form id="frmContratsta" >
+                <p:dataTable id="tblConttsta" value="#{contrato.listCtta}" var="prov" rowKey="#{prov.id_contratista}"
+                             selection="#{contrato.ctta}" selectionMode="single" paginator="true" rows="10" style="width: 460px" >
+                
+                    <p:column headerText="No. Contratista" >
+                        <h:outputText value="#{prov.id_contratista}" />
+                    </p:column>
+                    
+                    <p:column headerText="RFC" >
+                        <h:outputText value="#{prov.rfc}" />
+                    </p:column>
+                    
+                    <p:column headerText="Razón Social" >
+                        <h:outputText value="#{prov.razonSocial}" />
+                    </p:column>
+                    
+                    <p:ajax event="rowSelect" listener="#{contrato.seleccionarContratista}" 
+                            update=":contForm:cntrtista,:contForm:btnAutorizar" oncomplete="PF('dialContratista').hide();" />
+                    
+                </p:dataTable>
+                
+            </h:form>
+            
+        </p:dialog>
+
+<p:dialog header="Editar Subcontrato" widgetVar="dialSubctto" resizable="false" modal="true" width="600px" 
+          closeOnEscape="true" >
+            <h:form id="frmEditSbctto" class="form-horizontal">
+                <p:growl id="msgEdit" showDetail="true" life="5000" />
+                <div class="form-group" >
+                    <div class="col-md-6" >
+                        <h:outputLabel for="edCodIns" value="Código Insumo" />
+                        <p:inputText id="edCodIns" value="#{contrato.codIns}" styleClass="form-control" readonly="true" />
+                    </div>
+                    <div class="col-md-6" >
+                        <h:outputLabel for="edUnidIns" value="Unidad" />
+                        <p:inputText id="edUnidIns" value="#{contrato.unidIns}" styleClass="form-control" readonly="true" />
+                    </div>
+                </div>
+                
+                <div class="form-group" >
+                    <div class="col-md-6" >
+                        <h:outputLabel for="edCantInsDis" value="Cantidad Disponible:" />
+                        <p:inputText id="edCantInsDis" value="#{contrato.cantidCtrl}" styleClass="form-control" readonly="true" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </p:inputText>
+                    </div>
+                </div>
+                
+                <div class="form-group" >
+                    <div class="col-md-6" >
+                        <h:outputLabel for="edCantIns" value="Cantidad:" />
+                        <p:inputText id="edCantIns" value="#{contrato.cantIns}" styleClass="form-control" >
+                            <p:ajax event="change" listener="#{contrato.cambiarCantidadPrecio()}" 
+                                    update="editImpIns, msgEdit, edCantIns" />
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </p:inputText>
+                    </div>
+                    <div class="col-md-6" >
+                        <h:outputLabel for="editPreIns" value="Precio Unitario" />
+                        <p:inputText id="editPreIns" value="#{contrato.unitIns}" styleClass="form-control" >
+                            <p:ajax event="change" listener="#{contrato.cambiarCantidadPrecio()}" 
+                                    update="editImpIns, msgEdit, editPreIns" />
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </p:inputText>
+                    </div>
+                </div>
+                
+                <div class="form-group" >
+                    <div class="col-md-6" >
+                        <h:outputLabel for="editImpIns" value="Importe" />
+                        <p:inputText id="editImpIns" value="#{contrato.impIns}" styleClass="form-control" readonly="true" >
+                            <f:convertNumber pattern="###,###,###,###.00" />
+                        </p:inputText>
+                    </div>
+                    <div class="col-md-6" >
+                        <p:commandButton id="btnEdit" value="Editar" actionListener="#{contrato.ejecutarCambioIns()}" 
+                                         oncomplete="PF('dialSubctto').hide();" update=":contForm" />
+                    </div>
+                </div>
+                
+            </h:form>
+        </p:dialog>
+
+        <h:outputScript library="js" name="bootstrap.js" />
+    </h:body>
+</html>

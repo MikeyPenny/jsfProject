@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Listado Recepciones</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            
+            <p:dataTable id ="tablaRecepciones" emptyMessage="Sin Datos" var="rec" value="#{listadoRecepcionesMB.listRecepciones}" rowKey="#{rec.idRecepcion}" >
+                <f:facet name="header">
+                    Listado Recepciones
+                </f:facet>
+               
+                <p:column headerText="No de Recepción">
+                    <h:outputText value="#{rec.noRecepcion}" />
+                </p:column>
+                
+                <p:column headerText="Proveedor">
+                    <h:outputText value="#{rec.proveedor}" />
+                </p:column>
+
+                <p:column headerText="Fecha de Recepción">
+                    <h:outputText value="#{rec.fechaRecepcion}" />
+                </p:column>
+
+                <p:column headerText="No Orden de Compra" filterBy="#{rec.idOrdenCompra}" filterMatchMode="contains" >
+                    <h:outputText value="#{rec.idOrdenCompra}" />
+                </p:column>
+
+                <p:column headerText="Estatus">
+                    <h:outputText value="#{rec.estatus}" />
+                </p:column>
+                
+                <p:column headerText="Detalles">
+                    <p:commandButton update=":form:detalleRecepcion" actionListener="#{listadoRecepcionesMB.listarDetallesRecepcion(rec.idRecepcion)}" oncomplete="PF('dlg1').show()" icon="ui-icon-search" title="View">
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            
+            
+            <p:dialog header="Detalles de la Recepción" widgetVar="dlg1" modal="true" closable="true" 
+                      resizable="false" closeOnEscape="true" >
+
+                <p:dataTable id ="detalleRecepcion" var="item" value="#{listadoRecepcionesMB.listaInsumos}" >
+
+                    <p:column headerText="Insumo">
+                        <h:outputText value="#{item.nombreInsumo}" />
+                    </p:column>
+
+                    <p:column headerText="Cantidad Recepcionada">
+                        <h:outputText value="#{item.cantidadRecepcionada}" >
+                        <f:convertNumber pattern="###,###,###.000" />
+                        </h:outputText>
+                    </p:column>
+                    
+                     <p:column headerText="Unidad">
+                         <h:outputText value="#{item.unidad}" />
+                    </p:column>
+                    
+                </p:dataTable>
+            </p:dialog>
+            
+            
+        </h:form>
+    </h:body>
+</html>
+

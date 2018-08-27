@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+        
+        
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="cssLayout.css" />
+        <h:outputStylesheet library="css" name="estilos.css" />
+        <h:outputStylesheet library="css" name="fonts.css" />
+        <title>Facelets Template</title>
+    </h:head>
+
+    <h:body>
+
+        <div id="top" class="top">
+            <ui:insert name="top">
+                <header>
+                    <div class="menu_bar">
+                        <a href="#" class="bt-menu"><span class="icon-menu"></span>Menu</a>
+                    </div>
+                    <nav class="navbar container-fluid" >
+                        <ul>
+                            <li id="home" ><a href="#"><span class="icon-home"></span>Inicio</a></li>
+                            <li class="submenu" >
+                                <a href="#"><span class="icon-office"></span>Proyectos<span class="icon-circle-down"></span></a>
+                                <ul class="children" >
+                                    <li id="alta"><a href="#">Alta Proyecto<span class="icon-eye"></span></a></li>
+                                    <li id="list" ><a href="#">Editar Proyecto<span class="icon-eye"></span></a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><span class="icon-file-text2"></span>Presupuestos<span class="icon-circle-down"></span></a>
+                                <ul class="children" >
+                                    <li id="pCrea" ><a href="#">Crear Presupuesto<span class="icon-eye"></span></a></li>
+                                    <li id="pVent" ><a href="#">Cargar Presupuesto Venta<span class="icon-eye"></span></a></li>
+                                    <li id="pPro" ><a href="#">Cargar Presupuesto Proforma<span class="icon-eye"></span></a></li>
+                                    <li id="agrConc" ><a href="#">Crear Concepto Proforma<span class="icon-eye"></span></a></li>
+                                    <li id="editCncp" ><a href="#">Editar Concepto Proforma<span class="icon-eye"></span></a></li>
+<!--                                    <li id="vPresV" ><a href="#">Presupuesto de Venta<span class="icon-eye"></span></a></li>-->
+                                    <li id="vPresP" ><a href="#">Presupuesto Proforma<span class="icon-eye"></span></a></li>
+                                    <li id="expl" ><a href="#">Explosión de Insumos<span class="icon-eye"></span></a></li>
+                                    <li id="famil" ><a href="#">Agregar Familia<span class="icon-eye"></span></a></li>
+                                    
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><span class="icon-truck"></span>Contratistas<span class="icon-circle-down"></span></a>
+                                <ul class="children" >
+                                    <li id="preContrt" ><a href="#">Crear Pre-Contrato<span class="icon-eye"></span></a></li>
+                                    <li id="edPreCntrt" ><a href="#">Editar Pre-Contrato<span class="icon-eye"></span></a></li>
+                                    <li id="cntrto" ><a href="#">Iniciar Contrato<span class="icon-eye"></span></a></li>
+                                    <li id="editCtto" ><a href="#">Editar Contrato<span class="icon-eye"></span></a></li>
+                                    <li id="avan" ><a href="#">Avances<span class="icon-eye"></span></a></li>
+                                    <li id="editAvan" ><a href="#">Editar Avance<span class="icon-eye"></span></a></li>
+                                    <li id="estimac" ><a href="#">Estimaciones<span class="icon-eye"></span></a></li>
+                                    <li id="revEstima" ><a href="#">Revisar Estimación<span class="icon-eye"></span></a></li>
+                                    
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><span class="icon-cart"></span>Compras<span class="icon-circle-down"></span></a>
+                                <ul class="children" >
+                                    <li id="requis" ><a href="#">Requisición<span class="icon-eye"></span></a></li>
+                                    <li id="autRequis" ><a href="#">Autorizar Requisición<span class="icon-eye"></span></a></li>
+                                    <li id="orCompr" ><a href="#">Orden de Compra<span class="icon-eye"></span></a></li>
+                                    <li id="autOrComp" ><a href="#">Autorizar Orden de Compra<span class="icon-eye"></span></a></li>
+                                    <li id="catMat" ><a href="#">Catálogo Materiales<span class="icon-eye"></span></a></li>
+                                    <li id="agregProv" ><a href="#">Alta Proveedor<span class="icon-eye"></span></a></li>
+                                    <li id="editProv" ><a href="#">Editar Proveedor<span class="icon-eye"></span></a></li>
+                                    <li id="catProv" ><a href="#">Catálogo Proveedores<span class="icon-eye"></span></a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><span class="icon-database"></span>Almacen<span class="icon-circle-down"></span></a>
+                                <ul class="children" >
+                                    <li id="recepc" ><a href="#">Recepción<span class="icon-eye"></span></a></li>
+                                    <li id="lRecepc" ><a href="#">Listado de Recepciones<span class="icon-eye"></span></a></li>
+                                    <li id="devoluc" ><a href="#">Devolución<span class="icon-eye"></span></a></li>
+                                    <li id="listDevoluc" ><a href="#">Listado de Devoluciones<span class="icon-eye"></span></a></li>
+                                    <li id="vCons" ><a href="#">Vale de Consumo<span class="icon-eye"></span></a></li>
+                                    <li id="lVCons" ><a href="#">Listado de Vales de Consumo<span class="icon-eye"></span></a></li>
+                                    <li id="vDevol" ><a href="#">Vale de Devolución<span class="icon-eye"></span></a></li>
+                                    <li id="inventa" ><a href="#">Inventario<span class="icon-eye"></span></a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><span class="icon-calculator"></span>Facturas<span class="icon-circle-down"></span></a>
+                                <ul class="children" >
+                                    <li id="fReg" ><a href="#">Registro de Factura<span class="icon-eye"></span></a></li>
+                                    <li id="fList" ><a href="#">Listado de Facturas<span class="icon-eye"></span></a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><span class="icon-coin-dollar"></span>Cuentas por pagar<span class="icon-circle-down"></span></a>
+                                <ul class="children" >
+                                    <li id="remesa" ><a href="#">Remesa<span class="icon-eye"></span></a></li>
+                                    <li id="repRem" ><a href="#">Reporte de Pagos<span class="icon-eye"></span></a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><span class="icon-address-book"></span>Clientes<span class="icon-circle-down"></span></a>
+                                <ul class="children" >
+                                    <li id="cteReg" ><a href="#">Alta Cliente<span class="icon-eye"></span></a></li>
+                                    <li id="listCte" ><a href="#">Ver Clientes<span class="icon-eye"></span></a></li>
+                                    <li id="estimaCte" ><a href="#">Estimaciones al Cliente<span class="icon-eye"></span></a></li>
+                                    <li id="cteFacts" ><a href="#">Facturas de Clientes<span class="icon-eye"></span></a></li>
+                                    <li id="cteMovs" ><a href="#">Movimientos Clientes<span class="icon-eye"></span></a></li>
+                                </ul>
+                            </li>
+                            
+                        </ul>
+                    </nav>
+                </header>
+            </ui:insert>
+        </div>
+
+        <div id="content" class="center_content container-fluid">
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+        
+        <h:outputScript library="js" name="bootstrap.js" />
+        <h:outputScript library="js" name="jquery-2.1.4.min.js" />
+        <h:outputScript library="js" name="menu.js" />
+        <h:outputScript library="js" name="ajax.js" />
+    </h:body>
+
+</html>

@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      >
+    <h:head>
+        <title>Impresión de Comprobante De Requisición</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            
+        <p:commandButton value="IMPRIMIR" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
+            <p:printer target="detalle" />
+        </p:commandButton>
+
+        
+            <p:panel header="Detalle de la Requisición" id="detalle"  style="width:800px;">
+                
+                    <h:panelGrid columns="4" border="0" cellpadding="15">
+                        <h:outputLabel value="Proyecto: " />
+                        <h:outputLabel  value="#{formPrintRequisicion.nombreProyecto}" /> 
+                        <h:outputLabel  value="No. de Requisicion: " />
+                        <h:outputLabel value="#{formPrintRequisicion.noRequisicion}" />
+
+                        <h:outputLabel  value="Solicitante:" />
+                        <h:outputLabel value="#{formPrintRequisicion.nombreUsuarioSolicitante}" />
+                        <h:outputLabel  value="Fecha de Requisición: " /> 
+                        <h:outputLabel value="#{formPrintRequisicion.fechaSolicitud}" />  
+
+                        <h:outputLabel  value="Autoriza: " />
+                        <h:outputLabel  value="#{formPrintRequisicion.nombreUsuarioAutorizacion}" />  
+                        <h:outputLabel  value="Fecha de autorización: " /> 
+                        <h:outputLabel  value="#{formPrintRequisicion.fechaAutorizacion}" /> 
+                    </h:panelGrid>
+
+                    <p:panel id="panelInsumos" header="Listado de Insumos, Total: #{impresionSolRequisicionMB.listInsumos.size()} "  style="margin-bottom:20px">
+
+                        <p:dataTable id ="tablaInsumos" emptyMessage=" *** SIN INSUMOS *** " var="ins"  rowKey="#{ins.idInsumoTabla}"  value="#{impresionSolRequisicionMB.listInsumos}">
+
+                            <p:column headerText=" ">
+                                <h:outputText value="#{ins.idInsumoTabla}" />
+                            </p:column>
+
+                            <p:column headerText="Código Insumo">
+                                <h:outputText value="#{ins.clave}" />
+                            </p:column>
+
+                            <p:column headerText="Insumo">
+                                <h:outputText value="#{ins.concepto}" />
+                            </p:column>
+                            <p:column headerText="Unidades">
+                                <h:outputText value="#{ins.unidades}" />
+                            </p:column>
+
+                            <p:column id="cantidad" headerText="Cantidad">
+                                <h:outputText value="#{ins.cantDisponible}" >
+                                    <f:convertNumber pattern="###,###,###.000" />
+                                </h:outputText>
+                            </p:column>
+
+                        </p:dataTable>
+
+                    </p:panel>
+            </p:panel >
+
+        </h:form>
+    </h:body>
+</html>
+

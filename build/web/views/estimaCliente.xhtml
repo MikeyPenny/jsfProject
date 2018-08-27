@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Estimaciones al cliente</title>
+    </h:head>
+    <h:body>
+        <h:form id="frmEstimCl" >
+            <p:panel header="Crear estimación a clientes" footer="Elegir los conceptos a estimar del presupuesto de venta" >
+                <p:messages id="msgError" showDetail="true" autoUpdate="true" closable="true" />
+                <h:panelGrid columns="4" >
+                    
+                    <h:outputLabel for="proy" value="Proyecto" />
+                    <p:inputText id="proy" value="#{estimaCliente.proyecto}" onclick="PF('tabProy').show();" />
+
+                    <h:outputLabel for="pres" value="Presupuesto" />
+                    <p:inputText id="pres" value="#{estimaCliente.presupto}" onclick="PF('tabPres').show();" />
+                    
+                    <h:outputLabel for="avn" value="Avance" />
+                    <p:inputText id="avn" value="#{estimaCliente.porcentaje}" />
+                    
+                    <h:outputLabel for="deduc" value="Otras Deductivas" />
+                    <p:inputText id="deduc" value="#{estimaCliente.otrasDeductivas}" />
+                    
+                    
+                </h:panelGrid>
+                
+                
+
+
+                <h:panelGrid columns="2" >
+                    <p:outputLabel for="deducDesc" value="Descripción de Decuctivas" />
+                    <p:inputTextarea id="deducDesc" value="#{estimaCliente.descDeduct}" style="width: 350px" />
+                </h:panelGrid>
+                
+                
+                
+                <br/>
+                <p:commandButton id="btnEstim" value="Estimar" actionListener="#{estimaCliente.mostrarPresVta}" oncomplete="PF('dialElegir').show();" 
+                                 update=":frmElect:tblElect" />
+                
+                <br/><br/>
+                <p:dataTable id="tblConcAgreg" value="#{estimaCliente.listConSel}" var="sel" rowKey="#{sel.id_concepto}" 
+                             editable="true" editMode="cell" emptyMessage="Sin registros" >
+                    
+                    <p:column headerText="Descripcion" >
+                        <h:outputText value="#{sel.descripcion}" />
+                    </p:column>
+                    
+                    <p:column headerText="Unidad" >
+                        <h:outputText value="#{sel.unidad}" >
+                            
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Precio Unitario" >
+                        <h:outputText value="#{sel.presUnitario}" >
+                            <f:convertNumber  pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Cantidad Presupuesto" >
+                        <h:outputText value="#{sel.cantidad}" >
+                            <f:convertNumber  pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Cantidad x Estimar" >
+                        <h:outputText value="#{sel.porEstimar}" >
+                            <f:convertNumber  pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Cantidad a Estimar" >
+                        <p:cellEditor>
+                            <f:facet name="output"><p:inputText value="#{sel.cantEstimada}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="cant" value="#{sel.cantEstimada}"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    
+                    <p:column headerText="Importe" >
+                        <h:outputText value="#{sel.importe}" >
+                            <f:convertNumber  pattern="###,###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:ajax event="cellEdit" listener="#{estimaCliente.validarCantidad}" oncomplete="onCellEdit()" />
+                    
+                </p:dataTable>
+                <p:remoteCommand name="onCellEdit" actionListener="#{estimaCliente.editarImporte}" 
+                                 update=":frmEstimCl:tblConcAgreg, :frmEstimCl:sumaAdv" />
+                
+                <br/><br/>
+                
+                <h:panelGrid id="grdSuma" columns="2" >
+                    
+                    <p:outputLabel for="cpto" value="Descripción de la estimación "  />
+                    <p:inputTextarea id="cpto" value="#{estimaCliente.conceptoFact}" style="width: 350px; margin-left: 2.5em" />
+                    
+                    <h:outputText value="Total Avance" />
+                    <p:inputText id="sumaAdv" value="#{estimaCliente.sumaEstima}" style="margin-left: 45px" >
+                        <f:convertNumber type="currency" currencySymbol="$ " />
+                    </p:inputText>
+                </h:panelGrid>
+                <br/><br/>
+                <p:commandButton id="btnGuardarEst" value="Registrar Estimación" actionListener="#{estimaCliente.guardarEstimacion}" />
+                
+            </p:panel>
+            
+        </h:form>
+        
+        <p:dialog header="Elija los conceptos a estimar" widgetVar="dialElegir" modal="true" closable="true" resizable="false" 
+                  closeOnEscape="true"  >
+                
+                <h:form id="frmElect" >
+                   
+                    <p:dataTable id="tblElect" value="#{estimaCliente.listConc}" var="conc" rowKey="#{conc.id_concepto}" 
+                                 emptyMessage="No se encontraron registros." paginator="true" rows="5"
+                                 selection="#{estimaCliente.listConSel}" style="width: 800px"  >
+                        
+                        <p:column selectionMode="multiple" style="text-align: center" />
+                        
+                        <p:column headerText="Descripcion" style="font-size: smaller" >
+                            <h:outputText value="#{conc.descripcion}" />
+                        </p:column>
+                        
+                        <p:column headerText="Unidad" >
+                            <h:outputText value="#{conc.unidad}" />
+                        </p:column>
+                        
+                        <p:column headerText="Precio Unitario" >
+                            <h:outputText value="#{conc.presUnitario}" >
+                                <f:convertNumber  pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column headerText="Cantidad" >
+                            <h:outputText value="#{conc.cantidad}" >
+                                <f:convertNumber  pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column headerText="Importe" >
+                            <h:outputText value="#{conc.importe}" >
+                                <f:convertNumber  pattern="###,###,###,###.00" />
+                            </h:outputText>
+                        </p:column>
+                        
+                    </p:dataTable>
+                    
+                    <br/>
+                    <p:commandButton id="btnAgreg" value="Agregar" oncomplete="PF('dialElegir').hide();" 
+                                     update=":frmEstimCl:tblConcAgreg" />
+                    
+                </h:form>     
+            </p:dialog>
+        
+        <p:dialog widgetVar="tabProy" resizable="false" header="Proyectos" modal="true" closeOnEscape="true" 
+                  closable="true" >
+            <h:form id="frmProy">
+                <p:dataTable id="tblProy" value="#{estimaCliente.listProy}" var="proy" selection="#{estimaCliente.ps}"
+                             selectionMode="single" rowKey="#{proy.id_proyecto}" style="width: 460px" >
+
+                    <p:column headerText="No.Proyecto" >
+                        <h:outputText value="#{proy.id_proyecto}" />
+                    </p:column>
+
+                    <p:column headerText="Proyecto" >
+                        <h:outputText value="#{proy.proyecto}" />
+                    </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{estimaCliente.seleccionarProyect}" 
+                            update=":frmEstimCl:proy, :frmPres:tblPres" oncomplete="PF('tabProy').hide();" />
+
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+        <p:dialog header="Presupuesto" widgetVar="tabPres" resizable="false" modal="true" closeOnEscape="true" >
+            <h:form id="frmPres" >
+                <p:dataTable id="tblPres" value="#{estimaCliente.listaPres}" var="pres" selection="#{estimaCliente.pb}"
+                             selectionMode="single" rowKey="#{pres.id_presupuesto}" style="width: 460px" >
+
+
+                    <p:column headerText="No. Presupuesto" >
+                        <h:outputText value="#{pres.id_presupuesto}" />
+                    </p:column>
+
+
+                    <p:column headerText="Presupuesto" >
+                        <h:outputText value="#{pres.presupuesto}" />
+                    </p:column>
+
+                    <p:ajax event="rowSelect" listener="#{estimaCliente.seleccionarPresupuesto}" 
+                            update=":frmEstimCl:pres, :frmEstimCl:avn"
+                            oncomplete="PF('tabPres').hide();" />
+
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+        
+    </h:body>
+</html>
+

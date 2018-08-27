@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Vale Consumo</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            
+            <p:dataTable id ="tablaValeConsumo" emptyMessage="Sin Datos" var="vc" value="#{listarValesConsumo.listaValeConsumo}" rowKey="#{vc.idValeConsumo}" >
+                <f:facet name="header">
+                    Listado de Vales de Consumo
+                </f:facet>
+               
+                <p:column headerText="No de Vale de Consumo">
+                    <h:outputText value="#{vc.noValeConsumo}" />
+                </p:column>
+
+                <p:column headerText="Fecha de Elaboración">
+                    <h:outputText value="#{vc.fechaElaboracion}" />
+                </p:column>
+
+                <p:column headerText="Estatus">
+                    <h:outputText value="#{vc.estatus}" />
+                </p:column>
+                
+                <p:column headerText="Detalles">
+                    <p:commandButton update=":form:detalleValeConsumo" actionListener="#{listarValesConsumo.listarDetallesValeConsumo(vc.idValeConsumo)}" oncomplete="PF('dlg1').show()" icon="ui-icon-search" title="View">
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+            
+            <p:dialog header="Detalles del Vale de Consumo" widgetVar="dlg1" modal="true" closable="true" resizable="false" closeOnEscape="true" >
+
+                <p:dataTable id ="detalleValeConsumo" var="item" value="#{listarValesConsumo.listaInsumos}" >
+
+                    <p:column headerText="Insumo">
+                        <h:outputText value="#{item.nombreInsumo}" />
+                    </p:column>
+
+                    <p:column headerText="Cantidad de Salida">
+                        <h:outputText value="#{item.cantidad}" >
+                        <f:convertNumber pattern="###,###,###.00" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Unidad">
+                        <h:outputText value="#{item.unidades}" />
+                    </p:column>
+
+                </p:dataTable>
+            </p:dialog>
+            
+            
+         
+        </h:form>
+    </h:body>
+</html>
+
+
